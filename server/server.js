@@ -23,6 +23,10 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+// Health check route
+app.get('/', (req, res) => {
+  res.json({ status: 'online', message: 'Inventory Management API is running' });
+});
 
 // Log all requests for debugging
 app.use((req, res, next) => {

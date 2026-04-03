@@ -2,6 +2,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const InventoryContext = createContext();
 const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+if (!API_URL) {
+  console.warn("[InventoryContext]: VITE_API_URL is undefined. API calls may fail.");
+} else {
+  console.log(`[InventoryContext]: Using backend at ${API_URL}`);
+}
 
 export const useInventory = () => useContext(InventoryContext);
 

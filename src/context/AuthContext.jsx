@@ -3,6 +3,11 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const AuthContext = createContext();
 // Ensure API_URL doesn't end with a slash for consistent concatenation
 const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+if (!API_URL) {
+  console.warn("[AuthContext]: VITE_API_URL is undefined. API calls may fail.");
+} else {
+  console.log(`[AuthContext]: Using backend at ${API_URL}`);
+}
 
 export const useAuth = () => useContext(AuthContext);
 
