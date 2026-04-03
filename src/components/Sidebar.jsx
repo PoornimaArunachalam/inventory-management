@@ -2,7 +2,7 @@ import React from 'react';
 import { LayoutGrid, ShoppingCart, Package, Bell, Settings, PieChart, Menu, LogOut, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const Sidebar = ({ activePage, setActivePage }) => {
+const Sidebar = ({ activePage, setActivePage, isOpen }) => {
   const { user, logout } = useAuth();
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid },
@@ -13,23 +13,29 @@ const Sidebar = ({ activePage, setActivePage }) => {
   ];
 
   return (
-    <aside className="sidebar glass" style={{
-      width: 'var(--sidebar-width)',
-      height: '100vh',
-      position: 'fixed',
-      left: 0,
-      top: 0,
-      padding: '2rem 1rem',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '2rem',
-      zIndex: 100,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderTop: 'none',
-      borderLeft: 'none',
-      borderBottom: 'none',
-    }}>
+    <aside 
+      className={`sidebar glass ${isOpen ? 'open' : ''}`} 
+      style={{
+        width: 'var(--sidebar-width)',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        padding: '2rem 1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '2rem',
+        zIndex: 100,
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderTop: 'none',
+        borderLeft: 'none',
+        borderBottom: 'none',
+        transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        // Mobile-specific transform will be handled by CSS class, 
+        // but we can ensure it's hidden by default on small screens
+      }}
+    >
       <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '0 1.5rem' }}>
         <div style={{
           width: '44px',

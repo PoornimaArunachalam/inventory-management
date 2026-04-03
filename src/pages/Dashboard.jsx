@@ -104,7 +104,7 @@ const Dashboard = () => {
         <RevenueChart sales={sales} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+      <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
         <div className="glass" style={{ padding: '1.5rem' }}>
           <h3 style={{ marginBottom: '1.5rem' }}>Recent Sales</h3>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>

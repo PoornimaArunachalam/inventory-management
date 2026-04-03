@@ -82,7 +82,7 @@ const Auth = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="glass" style={{
+        <div className="glass auth-card" style={{
           width: 'min(450px, 90vw)',
           padding: '3rem 2.5rem',
           position: 'relative',

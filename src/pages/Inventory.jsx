@@ -37,9 +37,9 @@ const Inventory = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+    <div className="responsive-grid" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, minWidth: '300px' }}>
           <div className="glass" style={{
             display: 'flex',
             alignItems: 'center',
@@ -79,7 +79,7 @@ const Inventory = () => {
         </button>
       </div>
 
-      <div className="glass" style={{ padding: '1.5rem', overflowX: 'auto' }}>
+      <div className="glass table-container" style={{ padding: '1.5rem', overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ textAlign: 'left', color: 'var(--text-secondary)', borderBottom: '1px solid var(--glass-border)' }}>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Search, Bell, User, Settings } from 'lucide-react';
+import { Search, Bell, User, Settings, Menu } from 'lucide-react';
 
-const Navbar = ({ title }) => {
+const Navbar = ({ title, toggleSidebar }) => {
   return (
-    <header className="glass" style={{
+    <header className="glass navbar" style={{
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -13,7 +13,25 @@ const Navbar = ({ title }) => {
       top: '1rem',
       zIndex: 90,
     }}>
-      <h1 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{title}</h1>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <button 
+          className="mobile-toggle glass" 
+          onClick={toggleSidebar}
+          style={{
+            display: 'none', // Hidden by default, shown by CSS media query
+            width: '40px',
+            height: '40px',
+            placeItems: 'center',
+            cursor: 'pointer',
+            border: 'none',
+            borderRadius: '10px',
+            color: 'var(--accent-purple)'
+          }}
+        >
+          <Menu size={20} />
+        </button>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: '600' }}>{title}</h1>
+      </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
         <div style={{

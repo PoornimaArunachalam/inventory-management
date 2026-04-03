@@ -16,8 +16,9 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 function AppContent() {
   const { isAuthenticated, loading } = useAuth();
   const [activePage, setActivePage] = useState('dashboard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  if (loading) return null; // Or a splash screen
+  if (loading) return null;
 
   if (!isAuthenticated) {
     return <Auth />;
@@ -25,18 +26,12 @@ function AppContent() {
 
   const renderPage = () => {
     switch (activePage) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'inventory':
-        return <Inventory />;
-      case 'sales':
-        return <Sales />;
-      case 'reports':
-        return <Reports />;
-      case 'alerts':
-        return <Alerts />;
-      default:
-        return <Dashboard />;
+      case 'dashboard': return <Dashboard />;
+      case 'inventory': return <Inventory />;
+      case 'sales': return <Sales />;
+      case 'reports': return <Reports />;
+      case 'alerts': return <Alerts />;
+      default: return <Dashboard />;
     }
   };
 
@@ -45,11 +40,38 @@ function AppContent() {
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       <Background3D />
-      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      
+      {/* Mobile Sidebar Backdrop */}
+      {isSidebarOpen && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 95,
+            transition: 'all 0.3s'
+          }}
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <Sidebar 
+        activePage={activePage} 
+        setActivePage={(page) => {
+          setActivePage(page);
+          setIsSidebarOpen(false); // Close sidebar on mobile after clicking
+        }} 
+        isOpen={isSidebarOpen} 
+      />
+
       <main className="main-content">
-        <Navbar title={getPageTitle()} />
+        <Navbar 
+          title={getPageTitle()} 
+          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+        />
         {renderPage()}
       </main>
       <ChatBot />
