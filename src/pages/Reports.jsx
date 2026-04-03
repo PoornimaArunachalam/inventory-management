@@ -34,29 +34,129 @@ const Reports = () => {
   const topCategoryBySales = categories.sort((a, b) => categoryStats[b].salesRevenue - categoryStats[a].salesRevenue)[0] || 'N/A';
   const maxValue = Math.max(...categories.map(c => categoryStats[c].assetValue), 1);
 
-  const handleExportPDF = async () => {
-    if (!reportRef.current) return;
+  const handleExportPDF = () => {
     setIsExporting(true);
     
     try {
-      const canvas = await html2canvas(reportRef.current, {
-        scale: 2, // High quality
-        useCORS: true,
-        backgroundColor: '#0F071A', // Match theme bg
-        logging: false
-      });
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+      let y = 20;
+
+      // 1. Header (Business Name & Title)
+      doc.setFontSize(22);
+      doc.setTextColor(157, 80, 255); // --accent-purple
+      doc.setFont('helvetica', 'bold');
+      doc.text('STOCK & ROLL', margin, y);
       
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: [canvas.width / 2, canvas.height / 2]
-      });
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth - margin - 60, y);
       
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 2, canvas.height / 2);
-      pdf.save(`Stock-and-Roll-Analytics-${new Date().toLocaleDateString()}.pdf`);
+      y += 10;
+      doc.setDrawColor(157, 80, 255);
+      doc.setLineWidth(0.5);
+      doc.line(margin, y, pageWidth - margin, y);
+      
+      y += 15;
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Inventory Analytics Executive Report', margin, y);
+      
+      // 2. Summary Statistics Section
+      y += 15;
+      doc.setFillColor(245, 240, 255);
+      doc.rect(margin, y, pageWidth - (2 * margin), 35, 'F');
+      
+      y += 12;
+      doc.setFontSize(10);
+      doc.setTextColor(80, 80, 80);
+      doc.text('Total Asset Value:', margin + 5, y);
+      doc.text('Total Sales Revenue:', margin + 65, y);
+      doc.text('Top Sales Category:', margin + 125, y);
+      
+      y += 12;
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`INR ${totalAssetValue.toLocaleString('en-IN')}`, margin + 5, y);
+      doc.text(`INR ${totalSalesRevenue.toLocaleString('en-IN')}`, margin + 65, y);
+      doc.text(topCategoryBySales, margin + 125, y);
+      
+      // 2.5 Category Distribution Table
+      y += 25;
+      doc.setFontSize(12);
+      doc.text('Category Distribution Summary', margin, y);
+      
+      y += 8;
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Category', margin, y);
+      doc.text('Units', margin + 60, y);
+      doc.text('Asset Value (INR)', margin + 100, y);
+      
+      y += 4;
+      doc.line(margin, y, pageWidth - margin, y);
+      
+      doc.setFont('helvetica', 'normal');
+      Object.keys(categoryStats).forEach(cat => {
+        y += 8;
+        doc.text(cat, margin, y);
+        doc.text(categoryStats[cat].count.toString(), margin + 60, y);
+        doc.text(categoryStats[cat].assetValue.toLocaleString('en-IN'), margin + 100, y);
+      });
+
+      // 3. High-Value Inventory Table
+      y += 20;
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('High-Value Inventory Breakdown', margin, y);
+      
+      y += 10;
+      doc.setFillColor(157, 80, 255);
+      doc.setTextColor(255, 255, 255);
+      doc.rect(margin, y, pageWidth - (2 * margin), 8, 'F');
+      
+      y += 6;
+      doc.setFontSize(9);
+      doc.text('Product Name', margin + 5, y);
+      doc.text('Category', margin + 60, y);
+      doc.text('Stock', margin + 100, y);
+      doc.text('Market Value (INR)', margin + 130, y);
+      
+      doc.setTextColor(0, 0, 0);
+      doc.setFont('helvetica', 'normal');
+      
+      const sortedHighValue = products
+        .sort((a,b) => (Number(b.price) * Number(b.stock)) - (Number(a.price) * Number(a.stock)))
+        .slice(0, 10);
+
+      sortedHighValue.forEach((p, index) => {
+        y += 10;
+        if (y > 270) { doc.addPage(); y = 20; } // Basic pagination
+        doc.text(p.name, margin + 5, y);
+        doc.text(p.category, margin + 60, y);
+        doc.text(`${p.stock} units`, margin + 100, y);
+        doc.text((Number(p.price) * Number(p.stock)).toLocaleString('en-IN'), margin + 130, y);
+        
+        doc.setDrawColor(240, 240, 240);
+        doc.line(margin, y + 2, pageWidth - margin, y + 2);
+      });
+
+      // 4. Footer
+      const pageCount = doc.internal.getNumberOfPages();
+      for(let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text(`STOCK & ROLL INVENTORY REPORT - Page ${i} of ${pageCount}`, margin, 287);
+        doc.text('Confidential - System Generated Statistics', pageWidth - margin - 55, 287);
+      }
+
+      doc.save(`Stock_and_Roll_Report_${new Date().getTime()}.pdf`);
     } catch (error) {
-      console.error('PDF Export failed:', error);
+      console.error('PDF Generation failed:', error);
     } finally {
       setIsExporting(false);
     }

@@ -9,6 +9,8 @@ import Sales from './pages/Sales';
 import Alerts from './pages/Alerts';
 import Reports from './pages/Reports';
 import Auth from './pages/Auth';
+import ChatBot from './components/ChatBot';
+import Background3D from './components/Background3D';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 function AppContent() {
@@ -44,11 +46,13 @@ function AppContent() {
 
   return (
     <div className="app-container">
+      <Background3D />
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
       <main className="main-content">
         <Navbar title={getPageTitle()} />
         {renderPage()}
       </main>
+      <ChatBot />
     </div>
   );
 }
