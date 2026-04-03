@@ -119,9 +119,9 @@ const Inventory = () => {
                       borderRadius: '8px',
                       fontSize: '0.75rem',
                       fontWeight: '600',
-                      background: product.status === 'In Stock' ? 'rgba(16, 185, 129, 0.1)' : (product.status === 'Low Stock' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(244, 63, 94, 0.1)'),
+                      background: product.status === 'In Stock' ? 'rgba(59, 130, 246, 0.1)' : (product.status === 'Low Stock' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(244, 63, 94, 0.1)'),
                       color: product.status === 'In Stock' ? 'var(--accent-emerald)' : (product.status === 'Low Stock' ? '#f59e0b' : 'var(--accent-rose)'),
-                      border: product.status === 'In Stock' ? '1px solid rgba(16, 185, 129, 0.2)' : (product.status === 'Low Stock' ? '1px solid rgba(245, 158, 11, 0.2)' : '1px solid rgba(244, 63, 94, 0.2)')
+                      border: product.status === 'In Stock' ? '1px solid rgba(59, 130, 246, 0.2)' : (product.status === 'Low Stock' ? '1px solid rgba(245, 158, 11, 0.2)' : '1px solid rgba(244, 63, 94, 0.2)')
                     }}>
                       {product.status}
                     </span>

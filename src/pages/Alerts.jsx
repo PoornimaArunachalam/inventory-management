@@ -8,7 +8,7 @@ const AlertItem = ({ title, message, type, icon: Icon, delay }) => {
     switch(type) {
       case 'critical': return { bg: 'rgba(244, 63, 94, 0.1)', color: 'var(--accent-rose)', border: 'rgba(244, 63, 94, 0.2)' };
       case 'warning': return { bg: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', border: 'rgba(245, 158, 11, 0.2)' };
-      case 'success': return { bg: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-emerald)', border: 'rgba(16, 185, 129, 0.2)' };
+      case 'success': return { bg: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-emerald)', border: 'rgba(59, 130, 246, 0.2)' };
       default: return { bg: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-blue)', border: 'rgba(59, 130, 246, 0.2)' };
     }
   };

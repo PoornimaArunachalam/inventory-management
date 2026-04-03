@@ -18,8 +18,8 @@ const CustomTooltip = ({ active, payload, label }) => {
       <div className="glass" style={{ 
         padding: '10px 15px', 
         border: '1px solid var(--accent-purple)', 
-        background: 'rgba(15, 7, 26, 0.9)',
-        boxShadow: '0 0 15px rgba(157, 80, 255, 0.3)'
+        background: 'rgba(255, 255, 255, 0.9)',
+        boxShadow: '0 0 15px rgba(59, 130, 246, 0.3)'
       }}>
         <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: '500' }}>{label}</p>
         <p style={{ margin: '4px 0 0', color: 'var(--accent-purple)', fontSize: '1rem', fontWeight: '800' }}>
@@ -32,7 +32,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const RevenueChart = ({ sales }) => {
-  // Get last 7 days (including today)
+  // ... (keeping existing logic)
   const getLast7Days = () => {
     const days = [];
     for (let i = 6; i >= 0; i--) {
@@ -69,10 +69,10 @@ const RevenueChart = ({ sales }) => {
           <defs>
             <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--accent-purple)" stopOpacity={1} />
-              <stop offset="100%" stopColor="var(--accent-glow)" stopOpacity={0.6} />
+              <stop offset="100%" stopColor="var(--accent-blue)" stopOpacity={0.6} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(59, 130, 246, 0.1)" />
           <XAxis 
             dataKey="name" 
             axisLine={false} 
@@ -87,7 +87,7 @@ const RevenueChart = ({ sales }) => {
           />
           <Tooltip 
             content={<CustomTooltip />} 
-            cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+            cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
           />
           <Bar 
             dataKey="revenue" 
@@ -99,7 +99,7 @@ const RevenueChart = ({ sales }) => {
               <Cell 
                 key={`cell-${index}`} 
                 fill="url(#barGradient)" 
-                style={{ filter: 'drop-shadow(0 0 8px rgba(157, 80, 255, 0.4))' }}
+                style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.4))' }}
               />
             ))}
           </Bar>

@@ -1,14 +1,14 @@
 :root {
-  --bg-deep: #030a1c;
-  --bg-card: rgba(13, 22, 45, 0.7);
+  --bg-deep: #eff6ff;
+  --bg-card: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(59, 130, 246, 0.2);
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
-  --accent-indigo: #6366f1;
-  --accent-emerald: #10b981;
+  --accent-blue: #2563eb;
+  --accent-cyan: #0ea5e9;
+  --accent-indigo: #3b82f6;
+  --accent-emerald: #60a5fa;
   --accent-rose: #f43f5e;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --text-primary: #1e3a8a;
+  --text-secondary: #1d4ed8;
   --sidebar-width: 280px;
   --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   --shadow-blue: 0 8px 30px rgba(59, 130, 246, 0.15);
@@ -22,7 +22,7 @@
 }
 
 body {
-  background: var(--bg-dark);
+  background: var(--bg-deep);
   color: var(--text-primary);
   overflow-x: hidden;
   min-height: 100vh;
@@ -78,7 +78,7 @@ h1, h2, h3 {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+  background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -117,7 +117,7 @@ h1, h2, h3 {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+  background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;

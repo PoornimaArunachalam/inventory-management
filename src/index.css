@@ -3,22 +3,22 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
+  color-scheme: light;
   
-  /* Modern Colors - Midnight Violet Theme */
-  --bg-deep: #0F071A; /* Deep Midnight Violet */
-  --bg-main: #1A0B2E; /* Royal Purple */
-  --glass-bg: rgba(45, 20, 80, 0.4); /* Midnight Purple Glass */
-  --glass-border: rgba(157, 80, 255, 0.2); /* Neon Violet Border */
-  --text-primary: #E0CCFF; /* Starlight Lavender */
-  --text-secondary: #A08AB2; /* Muted Violet */
+  /* Modern Colors - Light Blue Theme */
+  --bg-deep: #f0f8ff; /* Light blue */
+  --bg-main: #e0f2fe; /* Soft sky blue */
+  --glass-bg: rgba(255, 255, 255, 0.6); /* White Glass */
+  --glass-border: rgba(59, 130, 246, 0.25); /* Blue Border */
+  --text-primary: #1e3a8a; /* Dark blue */
+  --text-secondary: #1d4ed8; /* Medium blue */
   
   /* Accents */
-  --accent-purple: #9D50FF; /* Neon Violet */
-  --accent-glow: #E100FF; /* Electric Purple */
-  --accent-blue: #7FB5FF; /* Soft Sky Blue */
-  --accent-cyan: #A0D8B3; /* Sage/Mint Cyan */
-  --accent-orange: #FF8C00; /* Vibrant Orange Contrast */
+  --accent-purple: #3b82f6; /* Blue (main accent) */
+  --accent-glow: #60a5fa; /* Light Blue */
+  --accent-blue: #2563eb; /* Dark blue */
+  --accent-cyan: #0ea5e9; /* Sky blue */
+  --accent-orange: #f59e0b; /* Amber */
   
   --sidebar-width: 280px;
   --navbar-height: 80px;
@@ -44,11 +44,11 @@ body {
 
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
 }
 
 .gradient-text {
@@ -77,25 +77,25 @@ body {
 
 .card-hover:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 40px -5px rgba(157, 80, 255, 0.3);
+  box-shadow: 0 10px 40px -5px rgba(59, 130, 246, 0.3);
   border-color: var(--accent-purple);
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-glow) 100%);
-  color: white;
+  color: #ffffff; /* White text on blue button */
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(157, 80, 255, 0.4);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(157, 80, 255, 0.6);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
 }
 
 @keyframes float {
@@ -128,7 +128,7 @@ body {
 .chat-header {
   padding: 1rem 1.5rem;
   background: linear-gradient(135deg, var(--accent-purple), var(--accent-glow));
-  color: white;
+  color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -141,7 +141,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: rgba(15, 7, 26, 0.6);
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .message {
@@ -154,7 +154,7 @@ body {
 
 .message.bot {
   align-self: flex-start;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(59, 130, 246, 0.1);
   border: 1px solid var(--glass-border);
   color: var(--text-primary);
   border-bottom-left-radius: 2px;
@@ -163,30 +163,17 @@ body {
 .message.user {
   align-self: flex-end;
   background: var(--accent-purple);
-  color: white;
+  color: #ffffff;
+  font-weight: 600;
   border-bottom-right-radius: 2px;
 }
 
 .chat-input-area {
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   gap: 0.5rem;
   border-top: 1px solid var(--glass-border);
-}
-
-.chat-input {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  padding: 0.5rem 1rem;
-  color: white;
-  outline: none;
-}
-
-.chat-input:focus {
-  border-color: var(--accent-purple);
 }
 
 .chat-bubble {
@@ -196,26 +183,19 @@ body {
   background: linear-gradient(135deg, var(--accent-purple), var(--accent-glow));
   display: grid;
   place-items: center;
-  color: white;
+  color: #ffffff;
   cursor: pointer;
-  box-shadow: 0 10px 30px rgba(157, 80, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
   border: none;
 }
 
 .chat-bubble:hover {
   transform: scale(1.1);
-  box-shadow: 0 15px 40px rgba(157, 80, 255, 0.6);
-}
-
-.quick-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
 }
 
 .quick-btn {
-  background: rgba(157, 80, 255, 0.1);
+  background: rgba(59, 130, 246, 0.1);
   border: 1px solid var(--glass-border);
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
@@ -226,7 +206,7 @@ body {
 }
 
 .quick-btn:hover {
-  background: rgba(157, 80, 255, 0.2);
+  background: rgba(59, 130, 246, 0.2);
   transform: translateY(-2px);
 }
 

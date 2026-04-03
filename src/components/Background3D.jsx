@@ -40,7 +40,7 @@ const Background3D = () => {
         radius: Math.random() * 4 + 2,
         speedX: (Math.random() - 0.5) * 0.4,
         speedY: (Math.random() - 0.5) * 0.4,
-        color: Math.random() > 0.5 ? '#9D50FF' : '#E100FF' // Theme colors
+        color: Math.random() > 0.5 ? '#3B82F6' : '#60A5FA' // Light Blue Theme colors
       });
     }
 
@@ -96,21 +96,21 @@ const Background3D = () => {
     };
   }, []);
 
-  return (
-    <canvas 
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: -1,
-        pointerEvents: 'none',
-        background: '#0F071A', // Deep Midnight Violet theme
-      }} 
-    />
-  );
+    return (
+      <canvas 
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: -1,
+          pointerEvents: 'none',
+          background: '#eff6ff', // Light Blue Theme
+        }} 
+      />
+    );
 };
 
 export default Background3D;

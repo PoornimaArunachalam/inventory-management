@@ -38,7 +38,7 @@ const AuthBackground = () => {
         rotation: Math.random() * Math.PI * 2,
         rotationSpeed: (Math.random() - 0.5) * 0.02,
         speedZ: -Math.random() * 2 - 1,
-        color: Math.random() > 0.5 ? '#9D50FF' : '#E100FF'
+        color: Math.random() > 0.5 ? '#3B82F6' : '#60A5FA'
       });
     }
 
@@ -83,7 +83,7 @@ const AuthBackground = () => {
     };
 
     const animate = () => {
-      ctx.fillStyle = '#0F071A'; // Deep Midnight
+      ctx.fillStyle = '#eff6ff'; // Light Blue
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Sort boxes by Z (painter's algorithm)

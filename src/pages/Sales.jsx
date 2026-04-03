@@ -192,7 +192,7 @@ const Sales = () => {
                      <td style={{ padding: '1rem', fontWeight: '700' }}>₹{(Number(sale?.amount) || 0).toLocaleString('en-IN')}</td>
                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{sale?.date || 'N/A'}</td>
                      <td style={{ padding: '1rem' }}>
-                       <span style={{ padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-emerald)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>Completed</span>
+                       <span style={{ padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-emerald)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>Completed</span>
                      </td>
                    </tr>
                  );
