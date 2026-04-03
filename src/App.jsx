@@ -1,0 +1,66 @@
+import React, { useState } from 'react';
+import './App.css';
+import { InventoryProvider } from './context/InventoryContext';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import Dashboard from './pages/Dashboard';
+import Inventory from './pages/Inventory';
+import Sales from './pages/Sales';
+import Alerts from './pages/Alerts';
+import Reports from './pages/Reports';
+import Auth from './pages/Auth';
+import { AuthProvider, useAuth } from './context/AuthContext';
+
+function AppContent() {
+  const { isAuthenticated, loading } = useAuth();
+  const [activePage, setActivePage] = useState('dashboard');
+
+  if (loading) return null; // Or a splash screen
+
+  if (!isAuthenticated) {
+    return <Auth />;
+  }
+
+  const renderPage = () => {
+    switch (activePage) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'inventory':
+        return <Inventory />;
+      case 'sales':
+        return <Sales />;
+      case 'reports':
+        return <Reports />;
+      case 'alerts':
+        return <Alerts />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
+  const getPageTitle = () => {
+    return activePage.charAt(0).toUpperCase() + activePage.slice(1);
+  };
+
+  return (
+    <div className="app-container">
+      <Sidebar activePage={activePage} setActivePage={setActivePage} />
+      <main className="main-content">
+        <Navbar title={getPageTitle()} />
+        {renderPage()}
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <InventoryProvider>
+        <AppContent />
+      </InventoryProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
