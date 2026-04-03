@@ -109,7 +109,12 @@ const Auth = () => {
                 transform: 'translateZ(50px)'
               }}
             >
-              {isLogin ? <LogIn size={36} /> : <UserPlus size={36} />}
+              <div style={{
+                fontWeight: '900',
+                fontSize: '2rem',
+                transform: 'rotate(-5deg)',
+                letterSpacing: '-1px'
+              }}>S&R</div>
             </motion.div>
             
             <motion.h1 
@@ -228,6 +233,63 @@ const Auth = () => {
             }}>
               "Inventory is not just stock; it's the rhythm of your business. Master the beat with <span style={{ color: 'var(--text-primary)', fontWeight: '600' }}>STOCK & ROLL</span>."
             </p>
+          </motion.div>
+
+          {/* Credits Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+            style={{
+              marginTop: '1.5rem',
+              textAlign: 'center'
+            }}
+          >
+            <div style={{
+              color: 'var(--text-secondary)',
+              fontSize: '0.75rem',
+              lineHeight: '1.6',
+            }}>
+              Designed and developed by Poornima A <br/>
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.75rem' }}>
+                <a 
+                  href="https://www.linkedin.com/in/poornima-a-288a54282" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    width: '40px', 
+                    height: '40px', 
+                    background: 'rgba(255, 255, 255, 0.05)', 
+                    border: '1px solid var(--glass-border)', 
+                    borderRadius: '10px', 
+                    color: 'var(--accent-purple)', 
+                    textDecoration: 'none', 
+                    transition: 'all 0.3s ease' 
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.background = 'rgba(157, 80, 255, 0.15)'; 
+                    e.currentTarget.style.color = 'var(--text-primary)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 5px 15px rgba(157, 80, 255, 0.2)';
+                  }} 
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; 
+                    e.currentTarget.style.color = 'var(--accent-purple)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </motion.div>
         </div>
       </motion.div>

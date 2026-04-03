@@ -33,12 +33,12 @@ const ChatBot = () => {
     if (text.includes('expensive') || text.includes('highest price') || text.includes('costly')) {
       if (products.length === 0) return "No products found to analyze.";
       const mostExp = [...products].sort((a, b) => b.price - a.price)[0];
-      return `The most expensive item is "${mostExp.name}" at $${mostExp.price.toLocaleString()}. We have ${mostExp.stock} units.`;
+      return `The most expensive item is "${mostExp.name}" at ₹${mostExp.price.toLocaleString()}. We have ${mostExp.stock} units.`;
     }
     if (text.includes('cheapest') || text.includes('lowest price')) {
       if (products.length === 0) return "No products found to analyze.";
       const cheapest = [...products].sort((a, b) => a.price - b.price)[0];
-      return `The cheapest item is "${cheapest.name}" at $${cheapest.price.toLocaleString()}.`;
+      return `The cheapest item is "${cheapest.name}" at ₹${cheapest.price.toLocaleString()}.`;
     }
 
     // 2. Category Analysis
@@ -81,7 +81,7 @@ const ChatBot = () => {
     if (text.includes('total value') || text.includes('worth') || text.includes('how much inventory')) {
       const totalUnits = products.reduce((acc, p) => acc + p.stock, 0);
       const totalValue = products.reduce((acc, p) => acc + (p.price * p.stock), 0);
-      return `Your warehouse currently holds ${totalUnits} total units across ${products.length} unique products, with a combined value of $${totalValue.toLocaleString()}.`;
+      return `Your warehouse currently holds ${totalUnits} total units across ${products.length} unique products, with a combined value of ₹${totalValue.toLocaleString()}.`;
     }
 
     // 7. Revenue / Sales Performance
@@ -91,15 +91,15 @@ const ChatBot = () => {
         const todayStr = new Date().toISOString().split('T')[0];
         const daySales = sales.filter(s => s.date === todayStr);
         const dayRev = daySales.reduce((acc, s) => acc + s.amount, 0);
-        return `Today you have recorded ${daySales.length} sales totaling $${dayRev.toLocaleString()}.`;
+        return `Today you have recorded ${daySales.length} sales totaling ₹${dayRev.toLocaleString()}.`;
       }
-      return `To date, you have generated $${totalRevenue.toLocaleString()} in revenue from ${sales.length} transactions.`;
+      return `To date, you have generated ₹${totalRevenue.toLocaleString()} in revenue from ${sales.length} transactions.`;
     }
 
     // 8. Specific Product Search
     const foundProduct = products.find(p => text.includes(p.name.toLowerCase()));
     if (foundProduct) {
-      return `Real-time stats for "${foundProduct.name}": ${foundProduct.stock} in stock, priced at $${foundProduct.price}. Category: ${foundProduct.category}.`;
+      return `Real-time stats for "${foundProduct.name}": ${foundProduct.stock} in stock, priced at ₹${foundProduct.price}. Category: ${foundProduct.category}.`;
     }
 
     // Default Fallback
@@ -128,6 +128,33 @@ const ChatBot = () => {
 
   return (
     <div className="chatbot-container">
+      <style>{`
+        .chatbot-container {
+          --accent-purple: #10b981; /* Emerald Theme */
+          --accent-glow: #34d399;   /* Mint Green */
+        }
+        .chatbot-container .message.bot {
+          background: rgba(16, 185, 129, 0.1);
+        }
+        .chatbot-container .chat-bubble {
+          box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+        .chatbot-container .chat-bubble:hover {
+          box-shadow: 0 15px 40px rgba(52, 211, 153, 0.5);
+        }
+        .chatbot-container .quick-btn {
+          background: rgba(16, 185, 129, 0.1);
+        }
+        .chatbot-container .quick-btn:hover {
+          background: rgba(16, 185, 129, 0.2);
+        }
+        .chatbot-container .btn-primary {
+          box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        .chatbot-container .btn-primary:hover {
+          box-shadow: 0 8px 25px rgba(52, 211, 153, 0.4);
+        }
+      `}</style>
       <AnimatePresence>
         {isOpen && (
           <motion.div 

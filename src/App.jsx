@@ -69,6 +69,7 @@ function AppContent() {
         <Navbar 
           title={getPageTitle()} 
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+          onBellClick={() => setActivePage('alerts')}
         />
         {renderPage()}
       </main>
