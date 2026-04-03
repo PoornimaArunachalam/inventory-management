@@ -1,5 +1,35 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  Cell, 
+  Area, 
+  ComposedChart 
+} from 'recharts';
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="glass" style={{ 
+        padding: '10px 15px', 
+        border: '1px solid var(--accent-purple)', 
+        background: 'rgba(15, 7, 26, 0.9)',
+        boxShadow: '0 0 15px rgba(157, 80, 255, 0.3)'
+      }}>
+        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: '500' }}>{label}</p>
+        <p style={{ margin: '4px 0 0', color: 'var(--accent-purple)', fontSize: '1rem', fontWeight: '800' }}>
+          ₹{payload[0].value.toLocaleString('en-IN')}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const RevenueChart = ({ sales }) => {
   // Get last 7 days (including today)
@@ -22,105 +52,59 @@ const RevenueChart = ({ sales }) => {
     return acc;
   }, {});
 
-  // Map to last 7 days, filling with 0 if no sales
-  const chartData = last7Days.map(date => {
-    // Format date for label (e.g., 'Apr 03')
+  // Map to last 7 days
+  const data = last7Days.map(date => {
     const d = new Date(date);
     const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     return { 
-      fullDate: date,
-      date: label, 
-      amount: revenueData[date] || 0 
+      name: label, 
+      revenue: revenueData[date] || 0 
     };
   });
 
-  const rawMax = Math.max(...chartData.map(d => d.amount));
-  const maxAmount = rawMax === 0 ? 100 : rawMax * 1.2;
-  const height = 200;
-  const width = 600;
-  const padding = 40;
-
-  const points = chartData.map((d, i) => ({
-    x: padding + (chartData.length > 1 ? (i * (width - 2 * padding) / (chartData.length - 1)) : (width / 2)),
-    y: height - padding - (d.amount / maxAmount * (height - 2 * padding))
-  }));
-
-  const pathD = `M ${points.map(p => `${p.x},${p.y}`).join(' L ')}`;
-  const areaD = `${pathD} L ${points[points.length - 1].x},${height - padding} L ${points[0].x},${height - padding} Z`;
-
   return (
-    <div style={{ width: '100%', height: '240px', position: 'relative' }}>
-      <svg width="100%" height="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--accent-blue)" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="var(--accent-blue)" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-
-        {/* Grid lines */}
-        {[0, 0.25, 0.5, 0.75, 1].map((p, i) => (
-          <line 
-            key={i} 
-            x1={padding} 
-            y1={padding + p * (height - 2 * padding)} 
-            x2={width - padding} 
-            y2={padding + p * (height - 2 * padding)} 
-            stroke="rgba(255, 255, 255, 0.03)" 
-            strokeWidth="1" 
+    <div style={{ width: '100%', height: '240px' }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <defs>
+            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--accent-purple)" stopOpacity={1} />
+              <stop offset="100%" stopColor="var(--accent-glow)" stopOpacity={0.6} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+          <XAxis 
+            dataKey="name" 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: 'var(--text-secondary)', fontSize: 10 }}
+            dy={10}
           />
-        ))}
-
-        {/* Gradient Fill */}
-        <defs>
-          <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--accent-purple)" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="var(--accent-purple)" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <motion.path 
-          d={areaD} 
-          fill="url(#areaGradient)" 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        />
-
-        {/* Main Line */}
-        <motion.path 
-          d={pathD} 
-          fill="none" 
-          stroke="var(--accent-purple)" 
-          strokeWidth="4" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.5, ease: 'easeInOut' }}
-        />
-
-        {/* Dots */}
-        {points.map((p, i) => (
-          <motion.circle 
-            key={i} 
-            cx={p.x} 
-            cy={p.y} 
-            r="4" 
-            fill="var(--bg-deep)" 
-            stroke="var(--accent-glow)" 
-            strokeWidth="2"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1 + i * 0.1 }}
+          <YAxis 
+            axisLine={false} 
+            tickLine={false} 
+            tick={{ fill: 'var(--text-secondary)', fontSize: 10 }}
           />
-        ))}
-      </svg>
-      
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: `0 ${padding}px`, marginTop: '-15px' }}>
-        {chartData.map((d, i) => (
-          <span key={i} style={{ fontSize: '0.65rem', color: 'var(--text-secondary)' }}>{d.date}</span>
-        ))}
-      </div>
+          <Tooltip 
+            content={<CustomTooltip />} 
+            cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+          />
+          <Bar 
+            dataKey="revenue" 
+            radius={[6, 6, 0, 0]} 
+            animationDuration={1500}
+            animationBegin={0}
+          >
+            {data.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill="url(#barGradient)" 
+                style={{ filter: 'drop-shadow(0 0 8px rgba(157, 80, 255, 0.4))' }}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 };

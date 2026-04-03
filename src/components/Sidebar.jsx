@@ -104,13 +104,23 @@ const Sidebar = ({ activePage, setActivePage }) => {
             alignItems: 'center',
             gap: '12px',
             padding: '0.75rem 1rem',
-            color: 'var(--accent-rose)',
-            background: 'none',
+            color: 'white',
+            background: '#EF4444',
             border: 'none',
             cursor: 'pointer',
             width: '100%',
             borderRadius: '12px',
-            transition: 'background 0.3s'
+            transition: 'all 0.3s',
+            fontWeight: '700',
+            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = '#DC2626';
+            e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = '#EF4444';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
           }}
           className="card-hover"
         >
