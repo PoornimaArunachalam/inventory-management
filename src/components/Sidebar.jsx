@@ -47,7 +47,7 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
           fontWeight: '900',
           color: '#ffffff',
           fontSize: '1.25rem',
-          boxShadow: '0 6px 20px rgba(59, 130, 246, 0.3)',
+          boxShadow: '0 6px 20px rgba(59, 130, 246, 0.25)',
           transform: 'rotate(-5deg)'
         }}>S&R</div>
         <h2 className="gradient-text" style={{ fontSize: '1.6rem', letterSpacing: '-0.04em', fontWeight: '900' }}>STOCK & ROLL</h2>
@@ -67,7 +67,7 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
                 gap: '12px',
                 padding: '0.75rem 1rem',
                 border: 'none',
-                background: isActive ? 'rgba(59, 130, 246, 0.15)' : 'transparent',
+                background: isActive ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
                 color: isActive ? 'var(--accent-purple)' : 'var(--text-secondary)',
                 borderRadius: '12px',
                 cursor: 'pointer',
@@ -94,7 +94,7 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
           alignItems: 'center',
           gap: '12px'
         }}>
-          <div style={{ width: '32px', height: '32px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '8px', display: 'grid', placeItems: 'center', color: 'var(--accent-purple)' }}>
+          <div style={{ width: '32px', height: '32px', background: 'rgba(59, 130, 246, 0.08)', borderRadius: '8px', display: 'grid', placeItems: 'center', color: 'var(--accent-purple)' }}>
             <User size={18} />
           </div>
           <div style={{ overflow: 'hidden' }}>

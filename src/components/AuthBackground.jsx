@@ -83,7 +83,7 @@ const AuthBackground = () => {
     };
 
     const animate = () => {
-      ctx.fillStyle = '#eff6ff'; // Light Blue
+      ctx.fillStyle = '#0f172a'; // Deep Dark Blue Background
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Sort boxes by Z (painter's algorithm)

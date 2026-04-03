@@ -18,8 +18,8 @@ const CustomTooltip = ({ active, payload, label }) => {
       <div className="glass" style={{ 
         padding: '10px 15px', 
         border: '1px solid var(--accent-purple)', 
-        background: 'rgba(255, 255, 255, 0.9)',
-        boxShadow: '0 0 15px rgba(59, 130, 246, 0.3)'
+        background: 'rgba(30, 41, 59, 0.9)',
+        boxShadow: '0 0 15px rgba(59, 130, 246, 0.15)'
       }}>
         <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: '500' }}>{label}</p>
         <p style={{ margin: '4px 0 0', color: 'var(--accent-purple)', fontSize: '1rem', fontWeight: '800' }}>
@@ -99,7 +99,7 @@ const RevenueChart = ({ sales }) => {
               <Cell 
                 key={`cell-${index}`} 
                 fill="url(#barGradient)" 
-                style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.4))' }}
+                style={{ filter: 'drop-shadow(0 0 8px rgba(96, 165, 250, 0.4))' }}
               />
             ))}
           </Bar>

@@ -3,7 +3,7 @@ import { useInventory } from '../context/InventoryContext';
 import { Bell, AlertTriangle, AlertCircle, CheckCircle2, Package, XCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const AlertItem = ({ title, message, type, icon: Icon, delay }) => {
+const AlertItem = ({ title, message, type, icon: Icon, delay, onResolve }) => {
   const getColors = () => {
     switch(type) {
       case 'critical': return { bg: 'rgba(244, 63, 94, 0.1)', color: 'var(--accent-rose)', border: 'rgba(244, 63, 94, 0.2)' };
@@ -45,7 +45,7 @@ const AlertItem = ({ title, message, type, icon: Icon, delay }) => {
         <h4 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.25rem' }}>{title}</h4>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{message}</p>
       </div>
-      <button style={{
+      <button onClick={onResolve} style={{
         padding: '0.5rem 1rem',
         borderRadius: '8px',
         background: 'rgba(255, 255, 255, 0.03)',
@@ -62,7 +62,13 @@ const AlertItem = ({ title, message, type, icon: Icon, delay }) => {
 };
 
 const Alerts = () => {
-  const { products } = useInventory();
+  const { products, updateProduct } = useInventory();
+
+  const handleResolve = (product) => {
+    if (window.confirm(`Auto-restock 50 units for ${product.name} to resolve this alert?`)) {
+      updateProduct(product.id, { ...product, stock: product.stock + 50 });
+    }
+  };
 
   const outOfStock = products.filter(p => p.stock === 0);
   const lowStock = products.filter(p => p.stock > 0 && p.stock <= 10);
@@ -80,7 +86,7 @@ const Alerts = () => {
             <AlertCircle size={20} /> Critical (Out of Stock)
           </h3>
           {outOfStock.length > 0 ? outOfStock.map((p, i) => (
-            <AlertItem key={p.id} title={p.name} message="Stock level reached 0. Immediate restock required." type="critical" icon={XCircle} delay={i * 0.1} />
+            <AlertItem key={p.id} title={p.name} message="Stock level reached 0. Immediate restock required." type="critical" icon={XCircle} delay={i * 0.1} onResolve={() => handleResolve(p)} />
           )) : (
             <div className="glass" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No critical alerts found.</div>
           )}
@@ -91,7 +97,7 @@ const Alerts = () => {
             <AlertTriangle size={20} /> Warning (Low Stock)
           </h3>
           {lowStock.length > 0 ? lowStock.map((p, i) => (
-            <AlertItem key={p.id} title={p.name} message={`Only ${p.stock} units remaining in inventory.`} type="warning" icon={AlertTriangle} delay={i * 0.1} />
+            <AlertItem key={p.id} title={p.name} message={`Only ${p.stock} units remaining in inventory.`} type="warning" icon={AlertTriangle} delay={i * 0.1} onResolve={() => handleResolve(p)} />
           )) : (
             <div className="glass" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No low stock items.</div>
           )}
