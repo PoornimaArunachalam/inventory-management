@@ -22,8 +22,10 @@ const Navbar = ({ title, toggleSidebar, onBellClick }) => {
       padding: '0.75rem 1.5rem',
       marginBottom: '2rem',
       position: 'sticky',
-      top: '1rem',
+      top: '0',
       zIndex: 90,
+      background: '#0f172a',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <button 
@@ -37,7 +39,7 @@ const Navbar = ({ title, toggleSidebar, onBellClick }) => {
             cursor: 'pointer',
             border: 'none',
             borderRadius: '10px',
-            color: 'var(--accent-purple)'
+            color: 'var(--accent-glow)'
           }}
         >
           <Menu size={20} />
@@ -50,10 +52,10 @@ const Navbar = ({ title, toggleSidebar, onBellClick }) => {
           display: 'flex',
           alignItems: 'center',
           gap: '8px',
-          background: 'rgba(255, 255, 255, 0.03)',
+          background: 'transparent',
           padding: '0.5rem 1rem',
           borderRadius: '12px',
-          border: '1px solid var(--glass-border)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           width: '300px'
         }}>
           <Search size={18} color="var(--text-secondary)" />
@@ -81,7 +83,7 @@ const Navbar = ({ title, toggleSidebar, onBellClick }) => {
             className="glass" 
             style={{ width: '40px', height: '40px', display: 'grid', placeItems: 'center', cursor: 'pointer', border: 'none', borderRadius: '10px' }}
           >
-            <Bell size={20} color="var(--accent-purple)" />
+            <Bell size={20} color="var(--accent-glow)" />
           </button>
           <div style={{ position: 'relative' }}>
             <button 
@@ -90,7 +92,9 @@ const Navbar = ({ title, toggleSidebar, onBellClick }) => {
               className="glass" 
               style={{ width: '40px', height: '40px', display: 'grid', placeItems: 'center', cursor: 'pointer', border: 'none', borderRadius: '10px' }}
             >
-              <User size={20} color="var(--accent-purple)" />
+              <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'var(--accent-blue)', display: 'grid', placeItems: 'center', color: 'white', fontWeight: '900', fontSize: '0.9rem' }}>
+                {user?.username?.[0]?.toUpperCase()}
+              </div>
             </button>
             
             {showProfile && (
@@ -104,22 +108,32 @@ const Navbar = ({ title, toggleSidebar, onBellClick }) => {
                   padding: '1.25rem',
                   borderRadius: '12px',
                   border: '1px solid var(--glass-border)',
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.7)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '1rem',
                   zIndex: 100,
-                  background: 'rgba(15, 7, 26, 0.95)',
-                  backdropFilter: 'blur(10px)'
+                  background: 'rgba(15, 23, 42, 0.95)',
+                  boxShadow: '0 10px 40px rgba(2, 6, 23, 0.8)',
                 }}
               >
                 <div style={{ paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   <p style={{ fontWeight: '700', fontSize: '1.1rem', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
-                    {user?.username || 'Administrator'}
+                    {user?.username}
                   </p>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    {user?.email || 'admin@stockandroll.com'}
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.4rem' }}>
+                    {user?.email}
                   </p>
+                  <span style={{ 
+                    fontSize: '0.7rem', 
+                    padding: '2px 8px', 
+                    borderRadius: '100px', 
+                    background: 'var(--accent-blue)', 
+                    color: 'white',
+                    fontWeight: '800',
+                    textTransform: 'uppercase'
+                  }}>
+                    {user?.role}
+                  </span>
                 </div>
                 
                 <button 
@@ -128,9 +142,9 @@ const Navbar = ({ title, toggleSidebar, onBellClick }) => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    background: 'rgba(255, 60, 60, 0.1)',
+                    background: 'rgba(239, 68, 68, 0.1)',
                     color: '#ff4d4d',
-                    border: '1px solid rgba(255, 60, 60, 0.2)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
                     padding: '0.75rem',
                     borderRadius: '8px',
                     cursor: 'pointer',

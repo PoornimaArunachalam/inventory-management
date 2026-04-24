@@ -3,8 +3,24 @@ import { useInventory } from '../context/InventoryContext';
 import { Plus, Edit2, Trash2, Search, Filter, ShoppingCart, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const PRODUCT_CATEGORIES = [
+  "Mobile and Accessories",
+  "Laptops and Computers",
+  "TV and Home Entertainment",
+  "Home Appliances",
+  "Kitchen Appliances",
+  "Wearable Devices",
+  "Cameras and Accessories",
+  "Gaming",
+  "Networking Devices",
+  "Storage Devices",
+  "Power and Electricals",
+  "Other Items"
+];
+
 const Inventory = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
@@ -14,16 +30,16 @@ const Inventory = () => {
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-        <div className="animate-float" style={{ fontSize: '1.5rem', color: 'var(--accent-purple)', fontWeight: '700' }}>Fetching inventory...</div>
+        <div className="animate-float" style={{ fontSize: '1.5rem', color: 'var(--accent-green)', fontWeight: '700' }}>Fetching inventory...</div>
       </div>
     );
   }
 
-  const filteredProducts = products.filter(p =>
-
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleEdit = (product) => {
     setEditingProduct(product);
@@ -47,7 +63,7 @@ const Inventory = () => {
             padding: '0.6rem 1rem',
             borderRadius: '12px',
             width: '300px',
-            background: 'rgba(255, 255, 255, 0.03)'
+            background: 'rgba(137, 168, 148, 0.08)'
           }}>
             <Search size={18} color="var(--text-secondary)" />
             <input
@@ -71,7 +87,7 @@ const Inventory = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            boxShadow: '0 8px 25px rgba(157, 80, 255, 0.3)'
+            boxShadow: '0 8px 25px rgba(137, 168, 148, 0.25)'
           }}
         >
           <Plus size={20} />
@@ -79,11 +95,53 @@ const Inventory = () => {
         </button>
       </div>
 
+      {/* Category Tabs */}
+      <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', scrollbarWidth: 'none', msOverflowStyle: 'none' }} className="hide-scrollbar">
+        <button
+          onClick={() => setSelectedCategory('All')}
+          style={{
+            padding: '0.5rem 1.25rem',
+            borderRadius: '20px',
+            whiteSpace: 'nowrap',
+            fontWeight: '600',
+            fontSize: '0.85rem',
+            border: selectedCategory === 'All' ? '1px solid var(--accent-glow)' : '1px solid var(--glass-border)',
+            background: selectedCategory === 'All' ? 'rgba(59, 130, 246, 0.15)' : 'var(--bg-card)',
+            color: selectedCategory === 'All' ? 'var(--text-primary)' : 'var(--text-secondary)',
+            cursor: 'pointer',
+            transition: 'var(--transition)'
+          }}
+        >
+          All
+        </button>
+        {PRODUCT_CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat)}
+            style={{
+              padding: '0.5rem 1.25rem',
+              borderRadius: '20px',
+              whiteSpace: 'nowrap',
+              fontWeight: '600',
+              fontSize: '0.85rem',
+              border: selectedCategory === cat ? '1px solid var(--accent-glow)' : '1px solid var(--glass-border)',
+              background: selectedCategory === cat ? 'rgba(59, 130, 246, 0.15)' : 'var(--bg-card)',
+              color: selectedCategory === cat ? 'var(--text-primary)' : 'var(--text-secondary)',
+              cursor: 'pointer',
+              transition: 'var(--transition)'
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
       <div className="glass table-container" style={{ padding: '1.5rem', overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ textAlign: 'left', color: 'var(--text-secondary)', borderBottom: '1px solid var(--glass-border)' }}>
               <th style={{ padding: '1rem' }}>Product Name</th>
+              <th style={{ padding: '1rem' }}>Description</th>
               <th style={{ padding: '1rem' }}>Category</th>
               <th style={{ padding: '1rem' }}>Stock</th>
               <th style={{ padding: '1rem' }}>Price</th>
@@ -99,13 +157,16 @@ const Inventory = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}
+                  style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}
                 >
                   <td style={{ padding: '1.25rem 1rem' }}>{product.name}</td>
+                  <td style={{ padding: '1.25rem 1rem', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                    {product.description || 'No description provided'}
+                  </td>
                   <td style={{ padding: '1.25rem 1rem' }}>
                     <span style={{
                       padding: '4px 12px',
-                      background: 'rgba(157, 80, 255, 0.1)',
+                      background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-glow))',
                       borderRadius: '8px',
                       fontSize: '0.8rem',
                       color: 'var(--text-secondary)'
@@ -114,23 +175,23 @@ const Inventory = () => {
                   <td style={{ padding: '1.25rem 1rem' }}>{product.stock}</td>
                   <td style={{ padding: '1.25rem 1rem' }}>₹{(Number(product.price) || 0).toLocaleString('en-IN')}</td>
                   <td style={{ padding: '1.25rem 1rem' }}>
-                    <span style={{
-                      padding: '4px 12px',
-                      borderRadius: '8px',
-                      fontSize: '0.75rem',
-                      fontWeight: '600',
-                      background: product.status === 'In Stock' ? 'rgba(59, 130, 246, 0.1)' : (product.status === 'Low Stock' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(244, 63, 94, 0.1)'),
-                      color: product.status === 'In Stock' ? 'var(--accent-emerald)' : (product.status === 'Low Stock' ? '#f59e0b' : 'var(--accent-rose)'),
-                      border: product.status === 'In Stock' ? '1px solid rgba(59, 130, 246, 0.2)' : (product.status === 'Low Stock' ? '1px solid rgba(245, 158, 11, 0.2)' : '1px solid rgba(244, 63, 94, 0.2)')
-                    }}>
-                      {product.status}
-                    </span>
+                      <span style={{ 
+                        padding: '4px 12px', 
+                        borderRadius: '20px', 
+                        fontSize: '0.75rem', 
+                        fontWeight: '700',
+                        background: 'rgba(39, 174, 96, 0.1)',
+                        color: 'var(--accent-success)',
+                        border: '1px solid rgba(39, 174, 96, 0.2)'
+                      }}>
+                        {product.status}
+                      </span>
                   </td>
                   <td style={{ padding: '1.25rem 1rem' }}>
                     <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                       <button 
                         onClick={() => { setSellingProduct(product); setIsSellModalOpen(true); }} 
-                        style={{ background: 'rgba(157, 80, 255, 0.1)', border: '1px solid rgba(157, 80, 255, 0.2)', padding: '12px', borderRadius: '12px', cursor: 'pointer', color: 'var(--accent-purple)', display: 'grid', placeItems: 'center', transition: 'var(--transition)' }}
+                        style={{ background: 'rgba(137, 168, 148, 0.1)', border: '1px solid rgba(137, 168, 148, 0.2)', padding: '12px', borderRadius: '12px', cursor: 'pointer', color: 'var(--accent-green)', display: 'grid', placeItems: 'center', transition: 'var(--transition)' }}
                         title={`Record Sale (₹${product.price}/unit)`}
                       >
                         <ShoppingCart size={18} />
@@ -154,7 +215,7 @@ const Inventory = () => {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(15, 7, 26, 0.8)',
+          background: 'rgba(255, 255, 255, 0.8)',
           display: 'grid',
           placeItems: 'center',
           zIndex: 1000,
@@ -164,7 +225,7 @@ const Inventory = () => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="glass"
-            style={{ padding: '2.5rem', width: '450px', position: 'relative', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}
+            style={{ padding: '2.5rem', width: '450px', position: 'relative', boxShadow: '0 20px 50px rgba(137, 168, 148, 0.15)' }}
           >
             <h2 style={{ marginBottom: '2rem' }}>{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
             <form onSubmit={(e) => {
@@ -172,6 +233,7 @@ const Inventory = () => {
               const formData = new FormData(e.target);
               const data = {
                 name: formData.get('name'),
+                description: formData.get('description'),
                 category: formData.get('category'),
                 stock: parseInt(formData.get('stock')),
                 price: parseFloat(formData.get('price')),
@@ -183,11 +245,19 @@ const Inventory = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Product Name</label>
-                  <input name="name" defaultValue={editingProduct?.name} required className="glass" style={{ padding: '0.75rem', color: 'var(--text-primary)', background: 'rgba(255,255,255,0.03)' }} />
+                  <input name="name" defaultValue={editingProduct?.name} required className="glass" style={{ padding: '0.75rem', color: 'var(--text-primary)', background: 'rgba(0,0,0,0.03)' }} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Description</label>
+                  <textarea name="description" defaultValue={editingProduct?.description} className="glass" rows="3" style={{ padding: '0.75rem', color: 'var(--text-primary)', background: 'var(--bg-card)', resize: 'vertical' }} placeholder="Short description about the product..." />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Category</label>
-                  <input name="category" defaultValue={editingProduct?.category} required className="glass" style={{ padding: '0.75rem', color: 'var(--text-primary)', background: 'rgba(255,255,255,0.03)' }} />
+                  <select name="category" defaultValue={editingProduct?.category || PRODUCT_CATEGORIES[0]} required className="glass" style={{ padding: '0.75rem', color: 'var(--text-primary)', background: 'var(--bg-card)', outline: 'none' }}>
+                    {PRODUCT_CATEGORIES.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -212,7 +282,7 @@ const Inventory = () => {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(15, 7, 26, 0.9)',
+          background: 'rgba(255, 255, 255, 0.9)',
           backdropFilter: 'blur(15px)',
           display: 'grid',
           placeItems: 'center',
@@ -224,7 +294,7 @@ const Inventory = () => {
             className="glass"
             style={{ padding: '2.5rem', width: '400px', textAlign: 'center', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}
           >
-            <div style={{ width: '64px', height: '64px', background: 'rgba(157, 80, 255, 0.1)', borderRadius: '16px', display: 'grid', placeItems: 'center', color: 'var(--accent-purple)', margin: '0 auto 1.5rem' }}>
+            <div style={{ width: '64px', height: '64px', background: 'rgba(137, 168, 148, 0.1)', borderRadius: '16px', display: 'grid', placeItems: 'center', color: 'var(--accent-green)', margin: '0 auto 1.5rem' }}>
                <ShoppingCart size={32} />
             </div>
             <h2 style={{ marginBottom: '0.5rem' }}>Record Sale</h2>
@@ -249,8 +319,9 @@ const Inventory = () => {
                         autoFocus
                         placeholder={`Available: ${sellingProduct?.stock}`} 
                         className="glass" 
-                        style={{ padding: '1rem', border: '1px solid var(--glass-border)', background: 'rgba(255,255,255,0.03)', fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-primary)' }} 
+                        style={{ padding: '1rem', border: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.03)', fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-primary)' }} 
                      />
+                     <span style={{ padding: '6px 14px', background: 'rgba(59, 130, 246, 0.15)', color: 'var(--accent-glow)', borderRadius: '20px', fontSize: '0.75rem', fontWeight: '800', border: '1px solid rgba(59, 130, 246, 0.3)' }}>In Stock</span>
                   </div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: '1rem' }}>

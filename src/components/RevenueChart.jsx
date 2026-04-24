@@ -17,12 +17,12 @@ const CustomTooltip = ({ active, payload, label }) => {
     return (
       <div className="glass" style={{ 
         padding: '10px 15px', 
-        border: '1px solid var(--accent-purple)', 
+        border: '1px solid #89a894', 
         background: 'rgba(30, 41, 59, 0.9)',
-        boxShadow: '0 0 15px rgba(59, 130, 246, 0.15)'
+        boxShadow: '0 0 15px rgba(137, 168, 148, 0.15)'
       }}>
         <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: '500' }}>{label}</p>
-        <p style={{ margin: '4px 0 0', color: 'var(--accent-purple)', fontSize: '1rem', fontWeight: '800' }}>
+        <p style={{ margin: '4px 0 0', color: '#89a894', fontSize: '1rem', fontWeight: '800' }}>
           ₹{payload[0].value.toLocaleString('en-IN')}
         </p>
       </div>
@@ -67,12 +67,12 @@ const RevenueChart = ({ sales }) => {
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <defs>
-            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--accent-purple)" stopOpacity={1} />
-              <stop offset="100%" stopColor="var(--accent-blue)" stopOpacity={0.6} />
-            </linearGradient>
+            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--accent-blue)" stopOpacity={0.4}/>
+            <stop offset="95%" stopColor="var(--accent-blue)" stopOpacity={0}/>
+          </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(59, 130, 246, 0.1)" />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255, 255, 255, 0.05)" />
           <XAxis 
             dataKey="name" 
             axisLine={false} 
@@ -84,10 +84,11 @@ const RevenueChart = ({ sales }) => {
             axisLine={false} 
             tickLine={false} 
             tick={{ fill: 'var(--text-secondary)', fontSize: 10 }}
+            tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(0) + 'k' : val}`}
           />
           <Tooltip 
             content={<CustomTooltip />} 
-            cursor={{ fill: 'rgba(59, 130, 246, 0.05)' }}
+            cursor={{ fill: 'rgba(255, 117, 24, 0.05)' }}
           />
           <Bar 
             dataKey="revenue" 
@@ -98,8 +99,8 @@ const RevenueChart = ({ sales }) => {
             {data.map((entry, index) => (
               <Cell 
                 key={`cell-${index}`} 
-                fill="url(#barGradient)" 
-                style={{ filter: 'drop-shadow(0 0 8px rgba(96, 165, 250, 0.4))' }}
+                fill="url(#colorValue)" 
+                style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.2))' }}
               />
             ))}
           </Bar>

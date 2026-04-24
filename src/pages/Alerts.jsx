@@ -7,9 +7,8 @@ const AlertItem = ({ title, message, type, icon: Icon, delay, onResolve }) => {
   const getColors = () => {
     switch(type) {
       case 'critical': return { bg: 'rgba(244, 63, 94, 0.1)', color: 'var(--accent-rose)', border: 'rgba(244, 63, 94, 0.2)' };
-      case 'warning': return { bg: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', border: 'rgba(245, 158, 11, 0.2)' };
-      case 'success': return { bg: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-emerald)', border: 'rgba(59, 130, 246, 0.2)' };
-      default: return { bg: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-blue)', border: 'rgba(59, 130, 246, 0.2)' };
+      case 'success': return { bg: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success)', border: 'rgba(16, 185, 129, 0.2)' };
+      default: return { bg: 'rgba(59, 130, 246, 0.15)', color: 'var(--accent-glow)', border: 'rgba(59, 130, 246, 0.3)' };
     }
   };
 
@@ -48,7 +47,7 @@ const AlertItem = ({ title, message, type, icon: Icon, delay, onResolve }) => {
       <button onClick={onResolve} style={{
         padding: '0.5rem 1rem',
         borderRadius: '8px',
-        background: 'rgba(255, 255, 255, 0.03)',
+        background: 'rgba(0, 210, 255, 0.1)',
         border: '1px solid var(--glass-border)',
         color: 'var(--text-secondary)',
         cursor: 'pointer',
@@ -110,8 +109,8 @@ const Alerts = () => {
           <div style={{ textAlign: 'center' }}>
             <div style={{ position: 'relative', width: '120px', height: '120px', margin: '0 auto 1rem' }}>
               <svg width="120" height="120" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="10" />
-                <circle cx="50" cy="50" r="45" fill="none" stroke="var(--accent-purple)" strokeWidth="10" strokeDasharray={`${((inStock.length || 0) / (products.length || 1)) * 283} 283`} strokeLinecap="round" transform="rotate(-90 50 50)" />
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0, 0, 0, 0.05)" strokeWidth="10" />
+                <circle cx="50" cy="50" r="45" fill="none" stroke="var(--accent-blue)" strokeWidth="10" strokeDasharray={`${((inStock.length || 0) / (products.length || 1)) * 283} 283`} strokeLinecap="round" transform="rotate(-90 50 50)" />
               </svg>
               <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
                 <h4 style={{ fontSize: '1.5rem', fontWeight: '800' }}>{Math.round((inStock.length / products.length) * 100) || 0}%</h4>
@@ -122,16 +121,16 @@ const Alerts = () => {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-             <div className="glass" style={{ padding: '1rem', background: 'rgba(157, 80, 255, 0.08)', borderColor: 'rgba(157, 80, 255, 0.2)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--accent-purple)', marginBottom: '0.5rem' }}>
-                  <CheckCircle2 size={18} /> <span style={{ fontWeight: '600' }}>System Status</span>
+             <div className="glass" style={{ padding: '1rem', background: 'rgba(59, 130, 246, 0.05)', borderColor: 'rgba(59, 130, 246, 0.1)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--accent-glow)', marginBottom: '0.5rem' }}>
+                   <CheckCircle2 size={18} /> <span style={{ fontWeight: '600' }}>System Status</span>
                 </div>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>All inventory nodes are synchronizing correctly with the cloud database.</p>
              </div>
              
-             <div className="glass" style={{ padding: '1rem', background: 'rgba(157, 80, 255, 0.08)', borderColor: 'rgba(157, 80, 255, 0.2)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--accent-purple)', marginBottom: '0.5rem' }}>
-                  <Package size={18} /> <span style={{ fontWeight: '600' }}>Stock Insights</span>
+             <div className="glass" style={{ padding: '1rem', background: 'rgba(59, 130, 246, 0.05)', borderColor: 'rgba(59, 130, 246, 0.1)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--accent-glow)', marginBottom: '0.5rem' }}>
+                   <Package size={18} /> <span style={{ fontWeight: '600' }}>Stock Insights</span>
                 </div>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Recommended restock value based on previous 30 days: ₹24,500.</p>
              </div>

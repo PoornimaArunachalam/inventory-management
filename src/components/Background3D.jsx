@@ -36,11 +36,11 @@ const Background3D = () => {
       orbs.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        z: Math.random() * 1.5 + 0.1, // 0.1 to 1.6 depth
+        z: Math.random() * 1.5 + 0.1, 
         radius: Math.random() * 4 + 2,
         speedX: (Math.random() - 0.5) * 0.4,
         speedY: (Math.random() - 0.5) * 0.4,
-        color: Math.random() > 0.5 ? '#3B82F6' : '#60A5FA' // Light Blue Theme colors
+        color: Math.random() > 0.5 ? '#89a894' : '#b5c99a' 
       });
     }
 
@@ -48,21 +48,17 @@ const Background3D = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       orbs.forEach(orb => {
-        // Base movement
         orb.x += orb.speedX;
         orb.y += orb.speedY;
 
-        // Mouse Parallax (based on depth Z)
         const displayX = orb.x + (mouseRef.current.x * orb.z);
         const displayY = orb.y + (mouseRef.current.y * orb.z);
 
-        // Screen wrap
         if (orb.x < -100) orb.x = canvas.width + 100;
         if (orb.x > canvas.width + 100) orb.x = -100;
         if (orb.y < -100) orb.y = canvas.height + 100;
         if (orb.y > canvas.height + 100) orb.y = -100;
 
-        // Draw Glow
         const gradient = ctx.createRadialGradient(
           displayX, displayY, 0,
           displayX, displayY, orb.radius * 12 * orb.z
@@ -77,7 +73,6 @@ const Background3D = () => {
         ctx.arc(displayX, displayY, orb.radius * 12 * orb.z, 0, Math.PI * 2);
         ctx.fill();
         
-        // Draw Core
         ctx.fillStyle = orb.color + '22';
         ctx.beginPath();
         ctx.arc(displayX, displayY, orb.radius * orb.z, 0, Math.PI * 2);
@@ -107,7 +102,7 @@ const Background3D = () => {
           height: '100vh',
           zIndex: -1,
           pointerEvents: 'none',
-          background: '#eff6ff', // Light Blue Theme
+          background: 'var(--bg-deep)', 
         }} 
       />
     );

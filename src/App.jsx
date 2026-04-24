@@ -9,11 +9,12 @@ import Sales from './pages/Sales';
 import Alerts from './pages/Alerts';
 import Reports from './pages/Reports';
 import Auth from './pages/Auth';
-import ChatBot from './components/ChatBot';
+import WorkerView from './pages/WorkerView';
+import SpeedDial from './components/SpeedDial';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 function AppContent() {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
   const [activePage, setActivePage] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -21,6 +22,11 @@ function AppContent() {
 
   if (!isAuthenticated) {
     return <Auth />;
+  }
+
+  // If user is a worker, they only see the WorkerView
+  if (user?.role === 'worker') {
+    return <WorkerView />;
   }
 
   const renderPage = () => {
@@ -73,7 +79,7 @@ function AppContent() {
         />
         {renderPage()}
       </main>
-      <ChatBot />
+      <SpeedDial />
     </div>
   );
 }

@@ -9,8 +9,8 @@ const AuthBackground = () => {
     const ctx = canvas.getContext('2d');
     let animationFrameId;
 
-    const boxes = [];
-    const boxCount = 25;
+    const particles = [];
+    const particleCount = 40;
     
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -22,84 +22,68 @@ const AuthBackground = () => {
 
     const handleMouseMove = (e) => {
       mouseRef.current = {
-        x: (e.clientX - window.innerWidth / 2) / 100,
-        y: (e.clientY - window.innerHeight / 2) / 100
+        x: (e.clientX - window.innerWidth / 2) / 50,
+        y: (e.clientY - window.innerHeight / 2) / 50
       };
     };
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Initial boxes
-    for (let i = 0; i < boxCount; i++) {
-      boxes.push({
-        x: (Math.random() - 0.5) * 2000,
-        y: (Math.random() - 0.5) * 2000,
-        z: Math.random() * 2000,
-        size: Math.random() * 40 + 20,
-        rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.02,
-        speedZ: -Math.random() * 2 - 1,
-        color: Math.random() > 0.5 ? '#3B82F6' : '#60A5FA'
+    // Initial particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * 1000,
+        size: Math.random() * 25 + 15, // larger for squares
+        angle: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.015,
+        speedX: (Math.random() - 0.5) * 0.4,
+        speedY: (Math.random() - 0.5) * 0.4,
+        color: `rgba(74, 144, 226, ${Math.random() * 0.2 + 0.1})`, // transparent blue outlines
+        lineWidth: Math.random() * 1.5 + 0.5
       });
     }
 
-    const project = (x, y, z) => {
-      const perspective = 600;
-      const scale = perspective / (perspective + z);
-      return {
-        x: (x * scale) + canvas.width / 2,
-        y: (y * scale) + canvas.height / 2,
-        scale
-      };
-    };
-
-    const drawBox = (box) => {
-      const p = project(box.x + mouseRef.current.x * 20, box.y + mouseRef.current.y * 20, box.z);
-      if (p.scale <= 0) return;
-
-      const size = box.size * p.scale;
+    const drawParticle = (p) => {
       ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(box.rotation);
-      
-      // Box Wireframe
-      ctx.strokeStyle = box.color + Math.floor(p.scale * 150).toString(16).padStart(2, '0');
-      ctx.lineWidth = 1.5 * p.scale;
-      ctx.strokeRect(-size / 2, -size / 2, size, size);
-      
-      // Accent corners
-      ctx.fillStyle = box.color;
-      ctx.globalAlpha = p.scale * 0.3;
-      ctx.fillRect(-size / 2 - 2, -size / 2 - 2, 4, 4);
-      ctx.fillRect(size / 2 - 2, -size / 2 - 2, 4, 4);
-      ctx.fillRect(-size / 2 - 2, size / 2 - 2, 4, 4);
-      ctx.fillRect(size / 2 - 2, size / 2 - 2, 4, 4);
-
-      // Glow 
-      ctx.shadowBlur = 15 * p.scale;
-      ctx.shadowColor = box.color;
-      ctx.strokeRect(-size / 2, -size / 2, size, size);
-      
+      ctx.translate(
+        p.x + mouseRef.current.x * (p.z / 1000), 
+        p.y + mouseRef.current.y * (p.z / 1000)
+      );
+      ctx.rotate(p.angle);
+      ctx.beginPath();
+      ctx.rect(-p.size / 2, -p.size / 2, p.size, p.size);
+      ctx.strokeStyle = p.color;
+      ctx.lineWidth = p.lineWidth;
+      ctx.stroke();
       ctx.restore();
     };
 
     const animate = () => {
-      ctx.fillStyle = '#0f172a'; // Deep Dark Blue Background
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Gradient background
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, 0,
+        canvas.width / 2, canvas.height / 2, canvas.width / 1.2
+      );
+      gradient.addColorStop(0, '#101726');
+      gradient.addColorStop(0.6, '#0b101c');
+      gradient.addColorStop(1, '#050810');
+      ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Sort boxes by Z (painter's algorithm)
-      boxes.sort((a, b) => b.z - a.z);
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.angle += p.rotationSpeed;
 
-      boxes.forEach(box => {
-        box.z += box.speedZ;
-        box.rotation += box.rotationSpeed;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
 
-        if (box.z < -400) {
-          box.z = 2000;
-          box.x = (Math.random() - 0.5) * 2000;
-          box.y = (Math.random() - 0.5) * 2000;
-        }
-
-        drawBox(box);
+        drawParticle(p);
       });
 
       animationFrameId = requestAnimationFrame(animate);

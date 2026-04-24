@@ -26,13 +26,13 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, role) => {
     try {
       console.log(`Attempting login at: ${API_URL}/auth/login`);
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, role })
       });
       const data = await res.json();
       if (res.ok) {
@@ -49,13 +49,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signup = async (username, email, password) => {
+  const signup = async (username, email, password, role) => {
     try {
       console.log(`Attempting signup at: ${API_URL}/auth/signup`);
       const res = await fetch(`${API_URL}/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password })
+        body: JSON.stringify({ username, email, password, role })
       });
       const data = await res.json();
       if (res.ok) {
@@ -78,8 +78,20 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const isAdmin = user?.role === 'admin';
+  const isWorker = user?.role === 'worker';
+
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, loading, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login, 
+      signup, 
+      logout, 
+      loading, 
+      isAuthenticated: !!user,
+      isAdmin,
+      isWorker
+    }}>
       {children}
     </AuthContext.Provider>
   );

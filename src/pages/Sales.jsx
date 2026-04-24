@@ -22,7 +22,7 @@ const Sales = () => {
 
       // 1. Header
       doc.setFontSize(22);
-      doc.setTextColor(157, 80, 255); // --accent-purple
+      doc.setTextColor(137, 168, 148); // --accent-green (Sage)
       doc.setFont('helvetica', 'bold');
       doc.text('STOCK & ROLL', margin, y);
       
@@ -32,7 +32,7 @@ const Sales = () => {
       doc.text(`Sales Ledger - ${new Date().toLocaleDateString()}`, pageWidth - margin - 50, y);
       
       y += 10;
-      doc.setDrawColor(157, 80, 255);
+      doc.setDrawColor(137, 168, 148);
       doc.line(margin, y, pageWidth - margin, y);
       
       y += 15;
@@ -42,7 +42,7 @@ const Sales = () => {
       
       // 2. Executive Summary
       y += 15;
-      doc.setFillColor(245, 240, 255);
+      doc.setFillColor(248, 247, 242);
       doc.rect(margin, y, pageWidth - (2 * margin), 30, 'F');
       
       y += 12;
@@ -66,7 +66,7 @@ const Sales = () => {
       doc.text('Detailed Transaction Ledger', margin, y);
       
       y += 10;
-      doc.setFillColor(157, 80, 255);
+      doc.setFillColor(137, 168, 148);
       doc.setTextColor(255, 255, 255);
       doc.rect(margin, y, pageWidth - (2 * margin), 8, 'F');
       
@@ -125,9 +125,9 @@ const Sales = () => {
               gap: '8px', 
               padding: '0.6rem 1.2rem', 
               cursor: isExporting ? 'not-allowed' : 'pointer', 
-              background: 'rgba(157, 80, 255, 0.1)', 
-              border: '1px solid var(--accent-purple)', 
-              color: 'var(--accent-glow)', 
+              background: 'rgba(41, 128, 185, 0.08)', 
+              border: '1px solid var(--accent-blue)', 
+              color: 'var(--accent-blue)', 
               borderRadius: '12px',
               fontWeight: '600'
             }}
@@ -140,19 +140,19 @@ const Sales = () => {
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
         {[
-          { title: 'Total Revenue', value: `₹${totalRevenue.toLocaleString('en-IN')}`, icon: TrendingUp, color: 'var(--accent-blue)', trend: '+12.5%' },
-          { title: 'Units Sold', value: totalItemsSold, icon: ShoppingCart, color: 'var(--accent-cyan)', trend: '+5.2%' },
-          { title: 'Avg. Order', value: `₹${averageOrderValue.toLocaleString('en-IN')}`, icon: ArrowUpRight, color: 'var(--accent-emerald)', trend: '+2.1%' }
+          { title: 'Total Revenue', value: `₹${totalRevenue.toLocaleString('en-IN')}`, icon: TrendingUp, color: 'var(--accent-glow)', trend: '+12.5%' },
+          { title: 'Units Sold', value: totalItemsSold, icon: ShoppingCart, color: 'var(--accent-purple)', trend: '+5.2%' },
+          { title: 'Avg. Order', value: `₹${averageOrderValue.toLocaleString('en-IN')}`, icon: ArrowUpRight, color: 'var(--accent-success)', trend: '+2.1%' }
         ].map((stat, i) => (
           <div key={i} className="glass card-hover" style={{ flex: 1, minWidth: '280px', padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.5rem' }}>{stat.title}</p>
-              <h3 style={{ fontSize: '1.75rem', fontWeight: '800' }}>{stat.value}</h3>
+              <h3 className="gradient-text" style={{ fontSize: '1.25rem', fontWeight: '800' }}>Recent Sales</h3>
               <p style={{ color: 'var(--accent-emerald)', fontSize: '0.75rem', marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <ArrowUpRight size={14} /> {stat.trend} <span style={{ color: 'var(--text-secondary)' }}>from last month</span>
               </p>
             </div>
-            <div style={{ width: '56px', height: '56px', background: `rgba(255, 255, 255, 0.03)`, borderRadius: '16px', display: 'grid', placeItems: 'center', color: stat.color }}>
+            <div style={{ width: '56px', height: '56px', background: `rgba(59, 130, 246, 0.15)`, borderRadius: '16px', display: 'grid', placeItems: 'center', color: 'var(--accent-glow)' }}>
               <stat.icon size={28} />
             </div>
           </div>
@@ -180,19 +180,19 @@ const Sales = () => {
                {sales && sales.length > 0 ? sales.slice().reverse().map((sale, index) => {
                  const safeId = sale && sale.id ? String(sale.id) : `temp-${index}`;
                  return (
-                    <tr key={safeId} className="card-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.3s' }}>
-                      <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--accent-purple)' }}>TXN-{safeId.slice(-6)}</td>
+                     <tr key={safeId} className="card-hover" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)', transition: 'background 0.3s' }}>
+                      <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--accent-green)' }}>TXN-{safeId.slice(-6)}</td>
                       <td style={{ padding: '1rem', fontWeight: '600' }}>{sale?.productName || 'Unknown Product'}</td>
                       <td style={{ padding: '1rem' }}>
-                        <span style={{ padding: '4px 10px', borderRadius: '8px', background: 'rgba(157, 80, 255, 0.1)', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                          {sale?.category || 'N/A'}
-                        </span>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.15)', display: 'grid', placeItems: 'center', color: 'var(--accent-glow)' }}>
+                        <TrendingUp size={20} />
+                      </div>
                       </td>
                      <td style={{ padding: '1rem' }}>{sale?.quantity || 0}</td>
                      <td style={{ padding: '1rem', fontWeight: '700' }}>₹{(Number(sale?.amount) || 0).toLocaleString('en-IN')}</td>
                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{sale?.date || 'N/A'}</td>
                      <td style={{ padding: '1rem' }}>
-                       <span style={{ padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-emerald)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>Completed</span>
+                       <span style={{ padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', background: 'rgba(39, 174, 96, 0.1)', color: 'var(--accent-success)', border: '1px solid rgba(39, 174, 96, 0.2)' }}>Completed</span>
                      </td>
                    </tr>
                  );

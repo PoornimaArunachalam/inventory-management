@@ -7,7 +7,7 @@ import AuthBackground from '../components/AuthBackground';
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '', role: 'worker' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, signup } = useAuth();
@@ -44,9 +44,9 @@ const Auth = () => {
     try {
       let result;
       if (isLogin) {
-        result = await login(formData.email, formData.password);
+        result = await login(formData.email, formData.password, formData.role);
       } else {
-        result = await signup(formData.username, formData.email, formData.password);
+        result = await signup(formData.username, formData.email, formData.password, formData.role);
       }
       if (!result.success) setError(result.message);
     } finally {
@@ -70,7 +70,7 @@ const Auth = () => {
         left: 0,
         display: 'grid',
         placeItems: 'center',
-        background: '#0F071A',
+        background: '#0b101c',
         overflow: 'hidden',
         perspective: '1000px'
       }}
@@ -82,13 +82,15 @@ const Auth = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="glass auth-card" style={{
+        <div className="auth-card" style={{
           width: 'min(450px, 90vw)',
           padding: '3rem 2.5rem',
           position: 'relative',
           zIndex: 10,
+          background: '#1a2035',
+          borderRadius: '16px',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-          border: '1px solid var(--glass-border)',
+          border: '1px solid rgba(255, 255, 255, 0.03)',
           transform: 'translateZ(20px)'
         }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -99,13 +101,13 @@ const Auth = () => {
               style={{
                 width: '70px',
                 height: '70px',
-                background: 'linear-gradient(135deg, var(--accent-purple), var(--accent-glow))',
-                borderRadius: '20px',
+                background: 'linear-gradient(135deg, #7b2cbf, #4cc9f0)',
+                borderRadius: '18px',
                 display: 'grid',
                 placeItems: 'center',
                 margin: '0 auto 1.5rem',
                 color: 'white',
-                boxShadow: '0 10px 30px rgba(157, 80, 255, 0.5)',
+                boxShadow: '0 8px 30px rgba(123, 44, 191, 0.6)',
                 transform: 'translateZ(50px)'
               }}
             >
@@ -121,8 +123,7 @@ const Auth = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="gradient-text" 
-              style={{ fontSize: '2.25rem', fontWeight: '900', marginBottom: '0.5rem', letterSpacing: '-0.02em' }}
+              style={{ fontSize: '2.25rem', fontWeight: '900', marginBottom: '0.5rem', letterSpacing: '-0.02em', color: '#4a90e2' }}
             >
               {isLogin ? 'Welcome Back' : 'Get Started'}
             </motion.h1>
@@ -140,24 +141,59 @@ const Auth = () => {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <AnimatePresence mode="popLayout">
               {!isLogin && (
-                <motion.div
-                  key="username"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <div style={{ position: 'relative' }}>
-                    <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
-                    <input
-                      name="username" type="text" required placeholder="Full Name"
-                      value={formData.username} onChange={handleChange}
-                      style={{ width: '100%', padding: '0.875rem 1rem 0.875rem 3rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none' }}
-                    />
-                  </div>
-                </motion.div>
+                <>
+                  <motion.div
+                    key="username"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div style={{ position: 'relative' }}>
+                      <User size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                      <input
+                        name="username" type="text" required placeholder="Full Name"
+                        value={formData.username} onChange={handleChange}
+                        style={{ width: '100%', padding: '0.875rem 1rem 0.875rem 3rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', color: 'white', outline: 'none' }}
+                      />
+                    </div>
+                  </motion.div>
+
+                </>
               )}
             </AnimatePresence>
+
+            <motion.div
+              key="role-selector"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div style={{ display: 'flex', gap: '10px', background: 'rgba(255, 255, 255, 0.03)', padding: '4px', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
+                {['worker', 'admin'].map(r => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, role: r })}
+                    style={{
+                      flex: 1,
+                      padding: '0.6rem',
+                      border: 'none',
+                      borderRadius: '8px',
+                      background: formData.role === r ? 'var(--accent-blue)' : 'transparent',
+                      color: formData.role === r ? 'white' : 'var(--text-secondary)',
+                      fontSize: '0.85rem',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s',
+                      boxShadow: formData.role === r ? '0 4px 15px rgba(0, 210, 255, 0.2)' : 'none'
+                    }}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
 
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}>
               <div style={{ position: 'relative' }}>
@@ -165,7 +201,7 @@ const Auth = () => {
                 <input
                   name="email" type="email" required placeholder="Email Address"
                   value={formData.email} onChange={handleChange}
-                  style={{ width: '100%', padding: '0.875rem 1rem 0.875rem 3rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none' }}
+                  style={{ width: '100%', padding: '0.875rem 1rem 0.875rem 3rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', color: 'white', outline: 'none' }}
                 />
               </div>
             </motion.div>
@@ -176,7 +212,7 @@ const Auth = () => {
                 <input
                   name="password" type={showPassword ? 'text' : 'password'} required placeholder="Password"
                   value={formData.password} onChange={handleChange}
-                  style={{ width: '100%', padding: '0.875rem 3rem 0.875rem 3rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none' }}
+                  style={{ width: '100%', padding: '0.875rem 3rem 0.875rem 3rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', color: 'white', outline: 'none' }}
                 />
                 <button
                   type="button" onClick={() => setShowPassword(!showPassword)}
@@ -190,13 +226,13 @@ const Auth = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              type="submit" disabled={loading} className="btn-primary"
-              style={{ padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '1.1rem', fontWeight: '800', marginTop: '0.5rem' }}
+              type="submit" disabled={loading}
+              style={{ padding: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '1.05rem', fontWeight: '800', marginTop: '0.5rem', background: '#4a90e2', color: 'white', borderRadius: '10px', border: 'none', cursor: 'pointer', boxShadow: '0 5px 15px rgba(74, 144, 226, 0.3)' }}
             >
               {loading ? (
                 <div style={{ width: '20px', height: '20px', border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
               ) : (
-                <> {isLogin ? 'Log In' : 'Create Account'} <ArrowRight size={20} /> </>
+                <> {isLogin ? 'Log In' : 'Create Account'} <ArrowRight size={18} strokeWidth={2.5} /> </>
               )}
             </motion.button>
           </form>
@@ -206,7 +242,7 @@ const Auth = () => {
               onClick={() => { setIsLogin(!isLogin); setError(''); }}
               style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '0.95rem', cursor: 'pointer' }}
             >
-              {isLogin ? <>Don't have an account? <span style={{ color: 'var(--accent-purple)', fontWeight: '700' }}>Sign up</span></> : <>Already have an account? <span style={{ color: 'var(--accent-purple)', fontWeight: '700' }}>Log in</span></>}
+              {isLogin ? <>Don't have an account? <span style={{ color: '#4a90e2', fontWeight: '700' }}>Sign up</span></> : <>Already have an account? <span style={{ color: '#4a90e2', fontWeight: '700' }}>Log in</span></>}
             </button>
           </motion.div>
 
@@ -222,7 +258,7 @@ const Auth = () => {
               textAlign: 'center'
             }}
           >
-            <Box size={16} style={{ color: 'var(--accent-purple)', marginBottom: '0.75rem', opacity: 0.6 }} />
+            <Box size={16} style={{ color: '#4a90e2', marginBottom: '0.75rem', opacity: 0.6 }} />
             <p style={{ 
               fontStyle: 'italic', 
               color: 'var(--text-secondary)', 
@@ -256,32 +292,29 @@ const Auth = () => {
                   href="https://www.linkedin.com/in/poornima-a-288a54282" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    width: '40px', 
-                    height: '40px', 
-                    background: 'rgba(255, 255, 255, 0.05)', 
-                    border: '1px solid var(--glass-border)', 
-                    borderRadius: '10px', 
-                    color: 'var(--accent-purple)', 
-                    textDecoration: 'none', 
-                    transition: 'all 0.3s ease' 
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.background = 'rgba(157, 80, 255, 0.15)'; 
-                    e.currentTarget.style.color = 'var(--text-primary)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 5px 15px rgba(157, 80, 255, 0.2)';
-                  }} 
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; 
-                    e.currentTarget.style.color = 'var(--accent-purple)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      width: '40px', 
+                      height: '40px', 
+                      background: '#4a90e2', 
+                      border: 'none', 
+                      borderRadius: '10px', 
+                      color: 'white', 
+                      textDecoration: 'none', 
+                      transition: 'all 0.3s ease',
+                      boxShadow: '0 4px 10px rgba(74, 144, 226, 0.3)'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 15px rgba(74, 144, 226, 0.5)';
+                    }} 
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 10px rgba(74, 144, 226, 0.3)';
+                    }}
+                  >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                     <rect x="2" y="9" width="4" height="12"></rect>

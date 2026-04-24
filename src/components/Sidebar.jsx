@@ -26,31 +26,25 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
         flexDirection: 'column',
         gap: '2rem',
         zIndex: 100,
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius: 0,
-        borderTop: 'none',
-        borderLeft: 'none',
-        borderBottom: 'none',
+        border: 'none',
+        borderRight: '1px solid rgba(255, 255, 255, 0.05)',
+        background: '#121826',
         transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        // Mobile-specific transform will be handled by CSS class, 
-        // but we can ensure it's hidden by default on small screens
       }}
     >
-      <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '0 1.5rem' }}>
+      <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '0 1.5rem', marginBottom: '1rem' }}>
         <div style={{
-          width: '44px',
-          height: '44px',
-          background: 'linear-gradient(135deg, var(--accent-purple), var(--accent-glow))',
-          borderRadius: '14px',
+          width: '40px',
+          height: '40px',
+          background: '#3b82f6',
+          borderRadius: '12px',
           display: 'grid',
           placeItems: 'center',
           fontWeight: '900',
           color: '#ffffff',
-          fontSize: '1.25rem',
-          boxShadow: '0 6px 20px rgba(59, 130, 246, 0.25)',
-          transform: 'rotate(-5deg)'
+          fontSize: '1.1rem',
         }}>S&R</div>
-        <h2 className="gradient-text" style={{ fontSize: '1.6rem', letterSpacing: '-0.04em', fontWeight: '900' }}>STOCK & ROLL</h2>
+        <h2 style={{ fontSize: '1.25rem', letterSpacing: '0', fontWeight: '800', lineHeight: 1.1, color: '#f8fafc' }}>STOCK &<br/>ROLL</h2>
       </div>
 
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -67,17 +61,17 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
                 gap: '12px',
                 padding: '0.75rem 1rem',
                 border: 'none',
-                background: isActive ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
-                color: isActive ? 'var(--accent-purple)' : 'var(--text-secondary)',
-                borderRadius: '12px',
+                background: isActive ? '#1e293b' : 'transparent',
+                color: isActive ? '#3b82f6' : '#94a3b8',
+                borderRadius: '8px',
                 cursor: 'pointer',
-                transition: 'var(--transition)',
+                transition: 'all 0.2s',
                 width: '100%',
                 textAlign: 'left',
-                fontWeight: isActive ? '600' : '400',
+                fontWeight: isActive ? '600' : '500',
               }}
             >
-              <Icon size={20} />
+              <Icon size={18} />
               <span>{item.label}</span>
             </button>
           );
@@ -87,19 +81,19 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <div style={{ 
           padding: '1rem', 
-          background: 'rgba(255, 255, 255, 0.03)', 
-          borderRadius: '12px',
-          border: '1px solid var(--glass-border)',
+          background: '#1a2234', 
+          borderRadius: '10px',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
           display: 'flex',
           alignItems: 'center',
           gap: '12px'
         }}>
-          <div style={{ width: '32px', height: '32px', background: 'rgba(59, 130, 246, 0.08)', borderRadius: '8px', display: 'grid', placeItems: 'center', color: 'var(--accent-purple)' }}>
-            <User size={18} />
+          <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', display: 'grid', placeItems: 'center', color: '#3b82f6', fontWeight: '900' }}>
+            <User size={16} />
           </div>
-          <div style={{ overflow: 'hidden' }}>
-            <p style={{ fontSize: '0.875rem', fontWeight: '600', whiteSpace: 'nowrap', textOverflow: 'ellipsis', color: 'var(--text-primary)' }}>{user?.username}</p>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Administrator</p>
+          <div style={{ textAlign: 'left' }}>
+            <p style={{ fontSize: '0.85rem', fontWeight: '600', color: '#f8fafc' }}>{user?.username}</p>
+            <p style={{ fontSize: '0.7rem', color: '#94a3b8', textTransform: 'capitalize' }}>{user?.role || 'Administrator'}</p>
           </div>
         </div>
 
@@ -108,29 +102,22 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
-            padding: '0.75rem 1rem',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '0.7rem 1rem',
             color: 'white',
-            background: '#EF4444',
+            background: '#ef4444',
             border: 'none',
             cursor: 'pointer',
             width: '100%',
-            borderRadius: '12px',
-            transition: 'all 0.3s',
+            borderRadius: '10px',
+            transition: 'all 0.2s',
             fontWeight: '700',
-            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)'
           }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.background = '#DC2626';
-            e.currentTarget.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.4)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.background = '#EF4444';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
-          }}
-          className="card-hover"
+          onMouseOver={(e) => e.currentTarget.style.background = '#dc2626'}
+          onMouseOut={(e) => e.currentTarget.style.background = '#ef4444'}
         >
-          <LogOut size={20} />
+          <LogOut size={18} />
           <span>Logout</span>
         </button>
       </div>

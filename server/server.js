@@ -53,19 +53,35 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+const adminMiddleware = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Access denied: Admin only' });
+  }
+};
+
 // ─── Auth Routes ─────────────────────────────────────────────────────────────
 
 app.post('/api/auth/signup', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: 'User already exists' });
 
-    user = new User({ username, email, password });
+    // Strict RBAC: Only one admin allowed
+    if (role === 'admin') {
+      const adminExists = await User.findOne({ role: 'admin' });
+      if (adminExists) {
+        return res.status(400).json({ message: 'An administrative account already exists. Only one admin is permitted.' });
+      }
+    }
+
+    user = new User({ username, email, password, role: role || 'worker' });
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.status(201).json({ token, user: { id: user._id, username, email } });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.status(201).json({ token, user: { id: user._id, username, email, role: user.role } });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -73,15 +89,29 @@ app.post('/api/auth/signup', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+
+    if (role && user.role !== role) {
+      return res.status(400).json({ message: 'Please select the correct role for this account.' });
+    }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, username: user.username, email } });
+    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token, user: { id: user._id, username: user.username, email, role: user.role } });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Stock view endpoint — limited fields for worker role
+app.get('/api/stock-view', authMiddleware, async (req, res) => {
+  try {
+    const products = await Product.find({}, 'name description category stock status price -_id').sort({ name: 1 });
+    res.json(products);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -111,7 +141,7 @@ app.get('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-app.post('/api/products', authMiddleware, async (req, res) => {
+app.post('/api/products', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
@@ -121,7 +151,7 @@ app.post('/api/products', authMiddleware, async (req, res) => {
   }
 });
 
-app.put('/api/products/:id', authMiddleware, async (req, res) => {
+app.put('/api/products/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     // Convert param to Number so it matches the schema field type
     const product = await Product.findOneAndUpdate(
@@ -136,7 +166,7 @@ app.put('/api/products/:id', authMiddleware, async (req, res) => {
   }
 });
 
-app.delete('/api/products/:id', authMiddleware, async (req, res) => {
+app.delete('/api/products/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const product = await Product.findOneAndDelete({ id: Number(req.params.id) });
     if (!product) return res.status(404).json({ message: 'Product not found' });

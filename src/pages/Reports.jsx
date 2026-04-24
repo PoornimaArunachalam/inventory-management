@@ -1,6 +1,6 @@
 import React from 'react';
 import { useInventory } from '../context/InventoryContext';
-import { PieChart as PieIcon, BarChart3, TrendingUp, DollarSign, Package, Box, ArrowUpRight, FileText, Loader2 } from 'lucide-react';
+import { PieChart as PieIcon, BarChart3, TrendingUp, IndianRupee, Package, Box, ArrowUpRight, FileText, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -45,7 +45,7 @@ const Reports = () => {
 
       // 1. Header (Business Name & Title)
       doc.setFontSize(22);
-      doc.setTextColor(157, 80, 255); // --accent-purple
+      doc.setTextColor(137, 168, 148); // --accent-green (Sage)
       doc.setFont('helvetica', 'bold');
       doc.text('STOCK & ROLL', margin, y);
       
@@ -55,7 +55,7 @@ const Reports = () => {
       doc.text(`Generated on: ${new Date().toLocaleString()}`, pageWidth - margin - 60, y);
       
       y += 10;
-      doc.setDrawColor(157, 80, 255);
+      doc.setDrawColor(137, 168, 148);
       doc.setLineWidth(0.5);
       doc.line(margin, y, pageWidth - margin, y);
       
@@ -66,7 +66,7 @@ const Reports = () => {
       
       // 2. Summary Statistics Section
       y += 15;
-      doc.setFillColor(245, 240, 255);
+      doc.setFillColor(248, 247, 242);
       doc.rect(margin, y, pageWidth - (2 * margin), 35, 'F');
       
       y += 12;
@@ -114,7 +114,7 @@ const Reports = () => {
       doc.text('High-Value Inventory Breakdown', margin, y);
       
       y += 10;
-      doc.setFillColor(157, 80, 255);
+      doc.setFillColor(137, 168, 148);
       doc.setTextColor(255, 255, 255);
       doc.rect(margin, y, pageWidth - (2 * margin), 8, 'F');
       
@@ -171,7 +171,7 @@ const Reports = () => {
     return [x, y];
   };
 
-  const colors = ['var(--accent-purple)', 'var(--accent-glow)', 'var(--accent-blue)', '#8A2BE2', '#9370DB', '#BA55D3'];
+  const colors = ['var(--accent-blue)', 'var(--accent-glow)', 'var(--accent-olive)', '#B5C99A', '#89A894', '#4A5D51'];
 
   // 3. Bar Chart Logic
   const maxAssetValue = Math.max(...categories.map(c => categoryStats[c].assetValue), 1);
@@ -195,16 +195,16 @@ const Reports = () => {
               gap: '8px', 
               padding: '0.6rem 1.25rem', 
               cursor: isExporting ? 'not-allowed' : 'pointer',
-              color: 'var(--accent-glow)',
-              border: '1px solid var(--accent-purple)',
-              background: 'rgba(157, 80, 255, 0.1)',
+              color: 'var(--accent-blue)',
+              border: '1px solid var(--accent-blue)',
+              background: 'rgba(41, 128, 185, 0.08)',
               fontWeight: '600'
             }}
           >
             {isExporting ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
             {isExporting ? 'Generating...' : 'Export PDF'}
           </button>
-          <div style={{ padding: '0.6rem 1.25rem', borderRadius: '12px', background: 'rgba(157, 80, 255, 0.1)', color: 'var(--accent-purple)', border: '1px solid rgba(157, 80, 255, 0.2)', fontSize: '0.875rem', fontWeight: '600', display: 'flex', alignItems: 'center' }}>
+          <div style={{ padding: '0.6rem 1.25rem', borderRadius: '12px', background: 'rgba(41, 128, 185, 0.1)', color: 'var(--accent-blue)', border: '1px solid rgba(41, 128, 185, 0.2)', fontSize: '0.875rem', fontWeight: '600', display: 'flex', alignItems: 'center' }}>
             Real-time Asset Tracking
           </div>
         </div>
@@ -215,11 +215,11 @@ const Reports = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
         {[
           { title: 'Total Asset Value', value: `₹${totalAssetValue.toLocaleString('en-IN')}`, icon: Box, color: 'var(--accent-purple)' },
-          { title: 'Total Sales Revenue', value: `₹${totalSalesRevenue.toLocaleString('en-IN')}`, icon: DollarSign, color: 'var(--accent-blue)' },
-          { title: 'Top Sales Category', value: topCategoryBySales, icon: TrendingUp, color: 'var(--accent-glow)' }
+          { title: 'Total Sales Revenue', value: `₹${totalSalesRevenue.toLocaleString('en-IN')}`, icon: IndianRupee, color: 'var(--accent-glow)' },
+          { title: 'Top Sales Category', value: topCategoryBySales, icon: TrendingUp, color: 'var(--accent-purple)' }
         ].map((stat, i) => (
           <div key={i} className="glass card-hover" style={{ flex: 1, minWidth: '300px', padding: '1.75rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-             <div style={{ width: '64px', height: '64px', background: 'rgba(0,0,0,0.03)', borderRadius: '16px', display: 'grid', placeItems: 'center', color: stat.color }}>
+             <div style={{ width: '64px', height: '64px', background: 'rgba(59, 130, 246, 0.15)', borderRadius: '16px', display: 'grid', placeItems: 'center', color: 'var(--accent-glow)' }}>
                 <stat.icon size={32} />
              </div>
              <div>
@@ -280,12 +280,12 @@ const Reports = () => {
                     <span style={{ fontWeight: '600' }}>{cat}</span>
                     <span style={{ color: 'var(--text-secondary)' }}>₹{value.toLocaleString('en-IN')}</span>
                   </div>
-                  <div style={{ height: '12px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '6px', overflow: 'hidden' }}>
+                  <div style={{ height: '12px', background: 'rgba(0, 0, 0, 0.05)', borderRadius: '6px', overflow: 'hidden' }}>
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${percent}%` }}
                       transition={{ duration: 1, delay: i * 0.1 }}
-                      style={{ height: '100%', background: `linear-gradient(90deg, ${colors[i % colors.length]}, var(--accent-purple))`, borderRadius: '6px' }}
+                      style={{ height: '100%', background: `linear-gradient(90deg, ${colors[i % colors.length]}, var(--accent-blue))`, borderRadius: '6px' }}
                     ></motion.div>
                   </div>
                 </div>
@@ -312,10 +312,15 @@ const Reports = () => {
             </thead>
             <tbody>
             {products.sort((a,b) => ( (Number(b.price) || 0) * (Number(b.stock) || 0) ) - ( (Number(a.price) || 0) * (Number(a.stock) || 0) )).slice(0, 5).map((p, i) => (
-                  <tr key={i} className="card-hover" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                  <tr key={i} className="card-hover" style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.05)' }}>
                      <td style={{ padding: '1rem', fontWeight: '700' }}>{p.name}</td>
                      <td style={{ padding: '1rem' }}>{p.category}</td>
-                     <td style={{ padding: '1rem', color: 'var(--accent-blue)', fontWeight: '800' }}>₹{( (Number(p.price) || 0) * (Number(p.stock) || 0) ).toLocaleString('en-IN')}</td>
+                     <td style={{ padding: '1rem', color: 'var(--accent-blue)', fontWeight: '800' }}>
+                        <svg width="100" height="20" style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }}>
+                           <path d="M10,80 Q30,40 50,60 T90,20" fill="none" stroke="var(--accent-blue)" strokeWidth="3" />
+                        </svg>
+                        ₹{( (Number(p.price) || 0) * (Number(p.stock) || 0) ).toLocaleString('en-IN')}
+                     </td>
                      <td style={{ padding: '1rem' }}>{p.stock} units</td>
                      <td style={{ padding: '1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent-emerald)', fontSize: '0.875rem' }}>
