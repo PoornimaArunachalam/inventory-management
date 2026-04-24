@@ -159,7 +159,9 @@ const Inventory = () => {
                   exit={{ opacity: 0 }}
                   style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}
                 >
-                  <td style={{ padding: '1.25rem 1rem' }}>{product.name}</td>
+                  <td style={{ padding: '1.25rem 1rem' }}>
+                    <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{product.name}</span>
+                  </td>
                   <td style={{ padding: '1.25rem 1rem', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                     {product.description || 'No description provided'}
                   </td>
@@ -234,6 +236,7 @@ const Inventory = () => {
               const data = {
                 name: formData.get('name'),
                 description: formData.get('description'),
+                imageUrl: formData.get('imageUrl'),
                 category: formData.get('category'),
                 stock: parseInt(formData.get('stock')),
                 price: parseFloat(formData.get('price')),

@@ -119,9 +119,12 @@ const Dashboard = () => {
             <tbody>
               {sales && sales.length > 0 ? sales.slice(-5).reverse().map((sale, idx) => {
                 const safeId = sale && sale.id ? String(sale.id) : `dash-temp-${idx}`;
+                const matchedProduct = products.find(p => p.id === sale.productId) || {};
                 return (
                   <tr key={safeId} style={{ borderTop: '1px solid var(--glass-border)' }}>
-                    <td style={{ padding: '1rem 0' }}>{sale?.productName || 'Unknown'}</td>
+                    <td style={{ padding: '1rem 0' }}>
+                      <span style={{ fontWeight: '600', color: '#f8fafc' }}>{sale?.productName || 'Unknown'}</span>
+                    </td>
                     <td style={{ padding: '1rem 0' }}>{sale?.quantity || 0}</td>
                     <td style={{ padding: '1rem 0' }}>₹{(Number(sale?.amount) || 0).toLocaleString('en-IN')}</td>
                     <td style={{ padding: '1rem 0' }}>{sale?.date || 'N/A'}</td>

@@ -179,14 +179,17 @@ const Sales = () => {
             <tbody>
                {sales && sales.length > 0 ? sales.slice().reverse().map((sale, index) => {
                  const safeId = sale && sale.id ? String(sale.id) : `temp-${index}`;
+                 const matchedProduct = products.find(p => p.id === sale.productId) || {};
                  return (
                      <tr key={safeId} className="card-hover" style={{ borderBottom: '1px solid rgba(0,0,0,0.05)', transition: 'background 0.3s' }}>
                       <td style={{ padding: '1rem', fontFamily: 'monospace', color: 'var(--accent-green)' }}>TXN-{safeId.slice(-6)}</td>
-                      <td style={{ padding: '1rem', fontWeight: '600' }}>{sale?.productName || 'Unknown Product'}</td>
                       <td style={{ padding: '1rem' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.15)', display: 'grid', placeItems: 'center', color: 'var(--accent-glow)' }}>
-                        <TrendingUp size={20} />
-                      </div>
+                        <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{sale?.productName || 'Unknown Product'}</span>
+                      </td>
+                      <td style={{ padding: '1rem' }}>
+                        <span style={{ padding: '6px 12px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-glow)', fontSize: '0.8rem', display: 'inline-block' }}>
+                          {sale?.category || 'Category'}
+                        </span>
                       </td>
                      <td style={{ padding: '1rem' }}>{sale?.quantity || 0}</td>
                      <td style={{ padding: '1rem', fontWeight: '700' }}>₹{(Number(sale?.amount) || 0).toLocaleString('en-IN')}</td>

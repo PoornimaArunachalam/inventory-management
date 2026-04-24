@@ -1,116 +1,162 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
-const AuthBackground = () => {
-  const canvasRef = useRef(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
-
-    const particles = [];
-    const particleCount = 40;
-    
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    const handleMouseMove = (e) => {
-      mouseRef.current = {
-        x: (e.clientX - window.innerWidth / 2) / 50,
-        y: (e.clientY - window.innerHeight / 2) / 50
-      };
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-
-    // Initial particles
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        z: Math.random() * 1000,
-        size: Math.random() * 25 + 15, // larger for squares
-        angle: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.015,
-        speedX: (Math.random() - 0.5) * 0.4,
-        speedY: (Math.random() - 0.5) * 0.4,
-        color: `rgba(74, 144, 226, ${Math.random() * 0.2 + 0.1})`, // transparent blue outlines
-        lineWidth: Math.random() * 1.5 + 0.5
-      });
-    }
-
-    const drawParticle = (p) => {
-      ctx.save();
-      ctx.translate(
-        p.x + mouseRef.current.x * (p.z / 1000), 
-        p.y + mouseRef.current.y * (p.z / 1000)
-      );
-      ctx.rotate(p.angle);
-      ctx.beginPath();
-      ctx.rect(-p.size / 2, -p.size / 2, p.size, p.size);
-      ctx.strokeStyle = p.color;
-      ctx.lineWidth = p.lineWidth;
-      ctx.stroke();
-      ctx.restore();
-    };
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Gradient background
-      const gradient = ctx.createRadialGradient(
-        canvas.width / 2, canvas.height / 2, 0,
-        canvas.width / 2, canvas.height / 2, canvas.width / 1.2
-      );
-      gradient.addColorStop(0, '#101726');
-      gradient.addColorStop(0.6, '#0b101c');
-      gradient.addColorStop(1, '#050810');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(p => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.angle += p.rotationSpeed;
-
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        drawParticle(p);
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
+const True3DCube = ({ size, color, glow }) => {
+  const faceStyle = {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    background: `rgba(${color}, 0.03)`, // very faint fill
+    border: `2px solid rgba(${color}, 0.6)`,
+    boxShadow: `0 0 20px rgba(${glow}, 0.4), inset 0 0 20px rgba(${glow}, 0.4)`,
+  };
+  const half = size / 2;
 
   return (
-    <canvas 
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 0,
-        pointerEvents: 'none',
-      }} 
-    />
+    <div style={{ width: size, height: size, position: 'relative', transformStyle: 'preserve-3d' }}>
+      <div style={{ ...faceStyle, transform: `translateZ(${half}px)` }} />
+      <div style={{ ...faceStyle, transform: `rotateY(180deg) translateZ(${half}px)` }} />
+      <div style={{ ...faceStyle, transform: `rotateY(90deg) translateZ(${half}px)` }} />
+      <div style={{ ...faceStyle, transform: `rotateY(-90deg) translateZ(${half}px)` }} />
+      <div style={{ ...faceStyle, transform: `rotateX(90deg) translateZ(${half}px)` }} />
+      <div style={{ ...faceStyle, transform: `rotateX(-90deg) translateZ(${half}px)` }} />
+    </div>
+  );
+};
+
+const AuthBackground = () => {
+  // Generate random 3D cubes
+  const palettes = [
+    { color: '59, 130, 246', glow: '59, 130, 246' },   // Blue
+    { color: '139, 92, 246', glow: '139, 92, 246' }, // Purple
+    { color: '6, 182, 212', glow: '6, 182, 212' },   // Cyan
+  ];
+
+  // We memoize the cubes so they don't regenerate on re-renders, but since this component
+  // rarely re-renders, calculating once per mount is fine.
+  const [cubes] = React.useState(() => 
+    Array.from({ length: 15 }).map((_, i) => {
+      const size = Math.random() * 60 + 40; // 40px to 100px
+      return {
+        id: i,
+        size,
+        left: `${Math.random() * 100}vw`,
+        delay: Math.random() * -20, 
+        duration: Math.random() * 20 + 20, // 20s to 40s
+        rotateXDir: Math.random() > 0.5 ? 1 : -1,
+        rotateYDir: Math.random() > 0.5 ? 1 : -1,
+        palette: palettes[Math.floor(Math.random() * palettes.length)]
+      };
+    })
+  );
+
+  // --- INTERACTIVITY HOOKS ---
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const zoom = useMotionValue(1);
+
+  // Smooth springs for a fluid, floating "live" feel
+  const smoothMouseX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+  const smoothZoom = useSpring(zoom, { stiffness: 100, damping: 20 });
+
+  // Transform mouse position to 3D rotation (-15deg to 15deg)
+  const rotateX = useTransform(smoothMouseY, [-1, 1], [15, -15]);
+  const rotateY = useTransform(smoothMouseX, [-1, 1], [-15, 15]);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      // Normalize mouse position between -1 and 1
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      mouseX.set(nx);
+      mouseY.set(ny);
+    };
+
+    const handleWheel = (e) => {
+      // Zoom in/out based on wheel scroll delta
+      let newZoom = zoom.get() - e.deltaY * 0.002;
+      // Clamp zoom between 0.5 (far away) and 4 (very close)
+      if (newZoom < 0.5) newZoom = 0.5;
+      if (newZoom > 4) newZoom = 4;
+      zoom.set(newZoom);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('wheel', handleWheel);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, [mouseX, mouseY, zoom]);
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      zIndex: 0,
+      overflow: 'hidden',
+      pointerEvents: 'auto', // Needs auto to capture wheel events on the background if empty
+      background: 'radial-gradient(circle at center, #0a1930 0%, #030712 100%)'
+    }}>
+      
+      {/* Interactive 3D Scene Container */}
+      <motion.div 
+        style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          perspective: '1000px',
+          transformStyle: 'preserve-3d',
+          scale: smoothZoom,
+          rotateX: rotateX,
+          rotateY: rotateY
+        }}
+      >
+        {cubes.map((cube) => (
+          <motion.div
+            key={cube.id}
+            initial={{ 
+              y: '120vh', 
+              x: cube.left,
+              rotateX: 0,
+              rotateY: 0,
+              rotateZ: 0,
+              opacity: 0,
+              scale: 0.5
+            }}
+            animate={{ 
+              y: '-30vh',
+              rotateX: 360 * cube.rotateXDir,
+              rotateY: 360 * cube.rotateYDir,
+              rotateZ: 180,
+              opacity: [0, 1, 1, 0],
+              scale: [0.5, 1, 1, 0.5]
+            }}
+            transition={{ 
+              duration: cube.duration, 
+              repeat: Infinity, 
+              delay: cube.delay,
+              ease: "linear"
+            }}
+            style={{
+              position: 'absolute',
+              width: cube.size,
+              height: cube.size,
+              transformStyle: 'preserve-3d'
+            }}
+          >
+            <True3DCube size={cube.size} color={cube.palette.color} glow={cube.palette.glow} />
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
   );
 };
 

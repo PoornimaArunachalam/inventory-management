@@ -10,7 +10,6 @@ import Alerts from './pages/Alerts';
 import Reports from './pages/Reports';
 import Auth from './pages/Auth';
 import WorkerView from './pages/WorkerView';
-import SpeedDial from './components/SpeedDial';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 function AppContent() {
@@ -79,7 +78,6 @@ function AppContent() {
         />
         {renderPage()}
       </main>
-      <SpeedDial />
     </div>
   );
 }
