@@ -56,16 +56,39 @@ const Inventory = () => {
     <div className="responsive-grid" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, minWidth: '300px' }}>
-          <div className="glass" style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '0.6rem 1rem',
-            borderRadius: '12px',
-            width: '300px',
-            background: 'rgba(137, 168, 148, 0.08)'
-          }}>
-            <Search size={18} color="var(--text-secondary)" />
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchTerm.trim()) {
+                alert(`Search logic triggered for: ${searchTerm}. The list below is filtered automatically as you type.`);
+              }
+            }}
+            className="glass" 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '0.6rem 1rem',
+              borderRadius: '12px',
+              width: '300px',
+              background: 'rgba(137, 168, 148, 0.08)',
+              transition: 'var(--transition)'
+            }}
+          >
+            <button 
+              type="submit" 
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                padding: 0, 
+                cursor: 'pointer', 
+                display: 'grid', 
+                placeItems: 'center',
+                color: 'var(--text-secondary)'
+              }}
+            >
+              <Search size={18} />
+            </button>
             <input
               type="text"
               placeholder="Filter products..."
@@ -73,7 +96,7 @@ const Inventory = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{ background: 'none', border: 'none', color: 'var(--text-primary)', outline: 'none', width: '100%' }}
             />
-          </div>
+          </form>
           <button className="glass" style={{ padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', border: 'none', borderRadius: '12px', color: 'var(--text-secondary)' }}>
             <Filter size={18} />
             Filter

@@ -30,6 +30,8 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
         borderRight: '1px solid rgba(255, 255, 255, 0.05)',
         background: '#121826',
         transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+        overflowY: 'auto',
+        scrollbarWidth: 'none',
       }}
     >
       <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '0 1.5rem', marginBottom: '1rem' }}>

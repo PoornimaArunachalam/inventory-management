@@ -128,19 +128,41 @@ const WorkerView = () => {
           </div>
         </motion.div>
 
-        {/* Search & Actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '2rem', marginBottom: '1.5rem' }}>
-          <div style={{ 
-            flex: 1, 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '12px', 
-            background: 'var(--glass-bg)', 
-            padding: '1rem 1.5rem', 
-            borderRadius: '18px',
-            border: '1px solid var(--glass-border)'
-          }}>
-            <Search size={20} color="var(--text-secondary)" />
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (search.trim()) {
+                alert(`Search logic triggered for: ${search}. The stock list below is already filtered.`);
+              }
+            }}
+            style={{ 
+              flex: 1, 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px', 
+              background: 'var(--glass-bg)', 
+              padding: '1rem 1.5rem', 
+              borderRadius: '18px',
+              border: '1px solid var(--glass-border)',
+              transition: 'var(--transition)'
+            }}
+            className="search-container-worker"
+          >
+            <button 
+              type="submit" 
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                padding: 0, 
+                cursor: 'pointer', 
+                color: 'var(--text-secondary)',
+                display: 'grid',
+                placeItems: 'center'
+              }}
+            >
+              <Search size={20} />
+            </button>
             <input 
               type="text" 
               placeholder="Filter stock by name or category..." 
@@ -148,7 +170,7 @@ const WorkerView = () => {
               onChange={(e) => setSearch(e.target.value)}
               style={{ background: 'none', border: 'none', outline: 'none', color: 'var(--text-primary)', width: '100%', fontSize: '1rem' }}
             />
-          </div>
+          </form>
           <button 
             onClick={fetchStock}
             className="btn-primary" 
