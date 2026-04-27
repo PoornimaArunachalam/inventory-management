@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
-import { Mail, Lock, User, ArrowRight, Eye, EyeOff, LogIn, UserPlus, Box } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Eye, EyeOff, LogIn, UserPlus, Box, Settings } from 'lucide-react';
 import AuthBackground from '../components/AuthBackground';
 
 const Auth = () => {
@@ -169,7 +169,8 @@ const Auth = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <div style={{ display: 'flex', gap: '10px', background: 'rgba(255, 255, 255, 0.03)', padding: '4px', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
+              <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>Select Access Level</label>
+              <div style={{ display: 'flex', gap: '10px', background: 'rgba(255, 255, 255, 0.05)', padding: '6px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.1)' }}>
                 {['worker', 'admin'].map(r => (
                   <button
                     key={r}
@@ -177,18 +178,24 @@ const Auth = () => {
                     onClick={() => setFormData({ ...formData, role: r })}
                     style={{
                       flex: 1,
-                      padding: '0.6rem',
+                      padding: '0.8rem',
                       border: 'none',
-                      borderRadius: '8px',
-                      background: formData.role === r ? 'var(--accent-blue)' : 'transparent',
+                      borderRadius: '10px',
+                      background: formData.role === r ? 'linear-gradient(135deg, #3b82f6, #2563eb)' : 'transparent',
                       color: formData.role === r ? 'white' : 'var(--text-secondary)',
-                      fontSize: '0.85rem',
-                      fontWeight: '700',
+                      fontSize: '0.9rem',
+                      fontWeight: '800',
+                      textTransform: 'capitalize',
                       cursor: 'pointer',
-                      transition: 'all 0.3s',
-                      boxShadow: formData.role === r ? '0 4px 15px rgba(0, 210, 255, 0.2)' : 'none'
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: formData.role === r ? '0 8px 20px rgba(37, 99, 235, 0.3)' : 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
                     }}
                   >
+                    {r === 'admin' ? <Settings size={16} /> : <User size={16} />}
                     {r}
                   </button>
                 ))}

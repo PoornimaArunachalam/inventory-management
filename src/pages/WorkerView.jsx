@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useInventory } from '../context/InventoryContext';
 import { Package, Search, LogOut, User, RefreshCcw, Box, AlertTriangle, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,37 +20,17 @@ const PRODUCT_CATEGORIES = [
 ];
 
 const WorkerView = () => {
-  const { user, logout } = useAuth();
-  const [stock, setStock] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { user, logout, isAdmin } = useAuth();
+  const { products: stock, loading, refreshData: fetchStock } = useInventory();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const fetchStock = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('inventory_token');
-      const res = await fetch('http://localhost:5000/api/stock-view', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setStock(data);
-    } catch (err) {
-      console.error('Error fetching stock:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchStock();
-  }, []);
-
-  const filteredStock = stock.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) || item.category.toLowerCase().includes(search.toLowerCase());
+  const filteredStock = (stock || []).filter(item => {
+    const matchesSearch = (item.name || '').toLowerCase().includes(search.toLowerCase()) || (item.category || '').toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -61,72 +42,74 @@ const WorkerView = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-deep)', padding: '2rem' }}>
+    <div style={{ minHeight: '100vh', background: isAdmin ? 'transparent' : 'var(--bg-deep)', padding: isAdmin ? '0' : '2rem' }}>
       <div className="aurora-container">
         <div className="aurora"></div>
       </div>
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
-            marginBottom: '3rem',
-            padding: '1.5rem',
-            borderRadius: '24px',
-            background: 'var(--glass-bg)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid var(--glass-border)'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-              borderRadius: '14px',
-              display: 'grid',
-              placeItems: 'center',
-              fontWeight: '900',
-              color: '#ffffff',
-              fontSize: '1.4rem',
-              boxShadow: '0 6px 20px rgba(59, 130, 246, 0.2)',
-              transform: 'rotate(-5deg)'
-            }}>S&R</div>
-            <div>
-              <h2 className="gradient-text" style={{ fontSize: '1.5rem', margin: 0 }}>Worker Hub</h2>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Stock Availability Tracker</p>
+        {!isAdmin && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              marginBottom: '3rem',
+              padding: '1.5rem',
+              borderRadius: '24px',
+              background: 'var(--glass-bg)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid var(--glass-border)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+                borderRadius: '14px',
+                display: 'grid',
+                placeItems: 'center',
+                fontWeight: '900',
+                color: '#ffffff',
+                fontSize: '1.4rem',
+                boxShadow: '0 6px 20px rgba(59, 130, 246, 0.2)',
+                transform: 'rotate(-5deg)'
+              }}>S&R</div>
+              <div>
+                <h2 className="gradient-text" style={{ fontSize: '1.5rem', margin: 0 }}>Worker Hub</h2>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Stock Availability Tracker</p>
+              </div>
             </div>
-          </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-primary)' }}>{user?.username}</p>
-              <p style={{ fontSize: '0.8rem', color: '#60a5fa', fontWeight: '800', textTransform: 'uppercase' }}>{user?.role}</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+              <div style={{ textAlign: 'right' }}>
+                <p style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--text-primary)' }}>{user?.username}</p>
+                <p style={{ fontSize: '0.8rem', color: '#60a5fa', fontWeight: '800', textTransform: 'uppercase' }}>{user?.role}</p>
+              </div>
+              <button 
+                onClick={logout}
+                className="glass"
+                style={{ 
+                  padding: '0.75rem', 
+                  borderRadius: '12px', 
+                  border: '1px solid rgba(239, 68, 68, 0.2)', 
+                  color: '#ef4444',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  gap: '8px',
+                  alignItems: 'center',
+                  fontWeight: '700'
+                }}
+              >
+                <LogOut size={18} /> Logout
+              </button>
             </div>
-            <button 
-              onClick={logout}
-              className="glass"
-              style={{ 
-                padding: '0.75rem', 
-                borderRadius: '12px', 
-                border: '1px solid rgba(239, 68, 68, 0.2)', 
-                color: '#ef4444',
-                cursor: 'pointer',
-                display: 'flex',
-                gap: '8px',
-                alignItems: 'center',
-                fontWeight: '700'
-              }}
-            >
-              <LogOut size={18} /> Logout
-            </button>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '2rem', marginBottom: '1.5rem' }}>
           <form 

@@ -35,6 +35,7 @@ function AppContent() {
       case 'sales': return <Sales />;
       case 'reports': return <Reports />;
       case 'alerts': return <Alerts />;
+      case 'worker_view': return <WorkerView />;
       default: return <Dashboard />;
     }
   };

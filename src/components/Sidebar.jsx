@@ -10,6 +10,7 @@ const Sidebar = ({ activePage, setActivePage, isOpen }) => {
     { id: 'sales', label: 'Sales', icon: ShoppingCart },
     { id: 'reports', label: 'Reports', icon: PieChart },
     { id: 'alerts', label: 'Alerts', icon: Bell },
+    { id: 'worker_view', label: 'Worker Hub', icon: User },
   ];
 
   return (
